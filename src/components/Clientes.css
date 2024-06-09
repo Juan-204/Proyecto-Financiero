@@ -1,27 +1,28 @@
 .formulario {
     display: inline-block;
-    margin-left: 50px;
-}
-
-h2 {
-    text-align: center;
-    margin-top: 20px;
-    
-}
-
-form {
-    width: 1500px;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    width: 100%;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+form {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .input-group {
-    margin: 10px;
+    width: 100%;
+    margin: 10px 0;
 }
 
 .input-group label {
@@ -30,8 +31,9 @@ form {
     margin-bottom: 5px;
 }
 
-.input-group input {
-    width: 70%;
+.input-group input,
+.input-group select {
+    width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -49,5 +51,31 @@ form {
 
 .input-group button:hover {
     background-color: #0056b3;
+}
+
+/* Media Queries for responsiveness */
+
+@media (min-width: 600px) {
+    .input-group {
+        flex: 1 1 48%; /* Take 48% of the container's width */
+        margin: 10px 1%; /* Add some margin for spacing */
+    }
+
+    .input-group input,
+    .input-group select {
+        width: 100%;
+    }
+}
+
+@media (min-width: 900px) {
+    form {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .input-group {
+        flex: 1 1 30%; /* Take 30% of the container's width */
+        margin: 10px 1%; /* Add some margin for spacing */
+    }
 }
 

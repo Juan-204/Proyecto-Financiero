@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import './Clientes.css'
+import React, { useState, useEffect } from 'react';
+import './Clientes.css';
+import { useNavigate } from 'react-router-dom';
 
 const Clientes = () => {
-    const [ formData, setFormData ] = useState({
+    const [formData, setFormData] = useState({
         primerNombre: '',
         segundoNombre: '',
         primerApellido: '',
@@ -17,23 +18,37 @@ const Clientes = () => {
         departamento: '',
         municipio: '',
         direccion: '',
-    })
+    });
 
-    const [usuarios, setUsuarios] = useState([])
+    const [usuarios, setUsuarios] = useState([]);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
-        const { name, value } = e.target
+        const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
-        }))
-    }
+        }));
+    };
+
+    const isFormValid = () => {
+        for (let key in formData) {
+            if (formData[key] === '' && key !== 'segundoNombre' && key !== 'segundoApellido') {
+                return false;
+            }
+        }
+        return true;
+    };
 
     const handleSubmit = (e) => {
-        e.preventDefault()
-        const newUsuarios = [...usuarios, formData]
-        setUsuarios(newUsuarios)
-        localStorage.setItem('usuarios', JSON.stringify(newUsuarios))
+        e.preventDefault();
+        if (!isFormValid()) {
+            alert("Por favor, complete todos los campos requeridos.");
+            return;
+        }
+        const newUsuarios = [...usuarios, formData];
+        setUsuarios(newUsuarios);
+        localStorage.setItem('usuarios', JSON.stringify(newUsuarios));
         setFormData({
             primerNombre: '',
             segundoNombre: '',
@@ -49,20 +64,22 @@ const Clientes = () => {
             departamento: '',
             municipio: '',
             direccion: '',
-        })
-    }
+        });
+        navigate('/Creditos');  // Redirigir a la página de créditos
+    };
 
     useEffect(() => {
         const storedUsuarios = localStorage.getItem('usuarios');
         if (storedUsuarios) {
             setUsuarios(JSON.parse(storedUsuarios));
         }
-    }, [])
+    }, []);
 
     return (
-    <div className='formulario'>
-                <h2>Formulario de Creación de Usuario</h2>
+        <div className='formulario'>
+            <h2>Formulario de Creación de Usuario</h2>
             <form onSubmit={handleSubmit}>
+                {/* Aquí están todos los campos del formulario */}
                 <div class="input-group">
                     <label htmlFor='primerNombre'>Primer Nombre:</label>
                     <input 
@@ -218,52 +235,55 @@ const Clientes = () => {
                     />
                 </div>
                 <div className="input-group">
-                    <button type="submit">Crear Usuario</button>
+                    <button type="submit">Crear Cliente</button>
                 </div>
             </form>
-    <h2>Usuarios Creados</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Primer Nombre</th>
-                <th>Segundo Nombre</th>
-                <th>Primer Apellido</th>
-                <th>segundo Apellido</th>
-                <th>Tipo de Documento</th>
-                <th>Numero de Documento</th>
-                <th>Fecha de Nacimiento</th>
-                <th>Numero de Celular</th>
-                <th>Numero de Teléfono</th>
-                <th>Correo Electrónico</th>
-                <th>Pais</th>
-                <th>Departamento</th>
-                <th>Municipio</th>
-                <th>Dirección</th>
-            </tr>
-        </thead>
-        <tbody>
-            {usuarios.map((usuario, index) => (
-                <tr key={index}>
-                    <td>{usuario.primerNombre}</td>
-                    <td>{usuario.segundoNombre}</td>
-                    <td>{usuario.primerApellido}</td>
-                    <td>{usuario.segundoApellido}</td>
-                    <td>{usuario.tipoDoc}</td>
-                    <td>{usuario.numeroDocu}</td>
-                    <td>{usuario.fechaNac}</td>
-                    <td>{usuario.cel}</td>
-                    <td>{usuario.tel}</td>
-                    <td>{usuario.email}</td>
-                    <td>{usuario.pais}</td>
-                    <td>{usuario.departamento}</td>
-                    <td>{usuario.municipio}</td>
-                    <td>{usuario.direccion}</td>
-                </tr>
-            ))}
-        </tbody>
-    </table>
-    </div>
-  )
+      
+
+
+<h2>Usuarios Creados</h2>
+<table>
+<thead>
+<tr>
+<th>Primer Nombre</th>
+<th>Segundo Nombre</th>
+<th>Primer Apellido</th>
+<th>segundo Apellido</th>
+<th>Tipo de Documento</th>
+<th>Numero de Documento</th>
+<th>Fecha de Nacimiento</th>
+<th>Numero de Celular</th>
+<th>Numero de Teléfono</th>
+<th>Correo Electrónico</th>
+<th>Pais</th>
+<th>Departamento</th>
+<th>Municipio</th>
+<th>Dirección</th>
+</tr>
+</thead>
+<tbody>
+{usuarios.map((usuario, index) => (
+<tr key={index}>
+<td>{usuario.primerNombre}</td>
+<td>{usuario.segundoNombre}</td>
+<td>{usuario.primerApellido}</td>
+<td>{usuario.segundoApellido}</td>
+<td>{usuario.tipoDoc}</td>
+<td>{usuario.numeroDocu}</td>
+<td>{usuario.fechaNac}</td>
+<td>{usuario.cel}</td>
+<td>{usuario.tel}</td>
+<td>{usuario.email}</td>
+<td>{usuario.pais}</td>
+<td>{usuario.departamento}</td>
+<td>{usuario.municipio}</td>
+<td>{usuario.direccion}</td>
+</tr>
+))}
+</tbody>
+</table>
+</div>
+)
 }
 
 export default Clientes
