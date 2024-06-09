@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Clientes.css';
 import { useNavigate } from 'react-router-dom';
+import Modal from './modal'; // Importa el nuevo componente Modal
 
 const Clientes = () => {
     const [formData, setFormData] = useState({
@@ -21,6 +22,7 @@ const Clientes = () => {
     });
 
     const [usuarios, setUsuarios] = useState([]);
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -65,7 +67,16 @@ const Clientes = () => {
             municipio: '',
             direccion: '',
         });
-        navigate('/Creditos');  // Redirigir a la página de créditos
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
+    const handleConfirmModal = () => {
+        setShowModal(false);
+        navigate('/Creditos'); // Redirigir a la página de créditos
     };
 
     useEffect(() => {
@@ -79,8 +90,7 @@ const Clientes = () => {
         <div className='formulario'>
             <h2>Formulario de Creación de Usuario</h2>
             <form onSubmit={handleSubmit}>
-                {/* Aquí están todos los campos del formulario */}
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor='primerNombre'>Primer Nombre:</label>
                     <input 
                     type="text"
@@ -91,7 +101,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="segundoNombre">Segundo Nombre:</label>
                     <input 
                     type="text" 
@@ -101,7 +111,7 @@ const Clientes = () => {
                     onChange={handleChange}
                     />
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="primerApellido">Primer Apellido:</label>
                     <input 
                     type="text" 
@@ -112,7 +122,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="segundoApellido">Segundo Apellido:</label>
                     <input 
                     type="text" 
@@ -122,7 +132,7 @@ const Clientes = () => {
                     onChange={handleChange}
                     />
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="tipoDoc">Tipo De Documento</label>
                     <select 
                     name="tipoDoc"
@@ -135,7 +145,7 @@ const Clientes = () => {
                         <option value="LC">Cedula de Extranjeria</option>
                     </select>
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="numeroDocu">Número de Documento:</label>
                     <input 
                     type="number" 
@@ -146,7 +156,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="fechaNac">Fecha de Nacimiento:</label>
                     <input 
                     type="date" 
@@ -157,7 +167,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="cel">Número de Celular:</label>
                     <input 
                     type="number" 
@@ -168,7 +178,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="tel">Número de Teléfono:</label>
                     <input 
                     type="number"
@@ -179,7 +189,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="email">Correo Electrónico:</label>
                     <input 
                     type="email" 
@@ -190,8 +200,8 @@ const Clientes = () => {
                     required
                     />
                 </div>
-                <div class="input-group">
-                    <label HtmlFor="pais">Pais:</label>
+                <div className="input-group">
+                    <label htmlFor="pais">Pais:</label>
                     <input 
                     type="text" 
                     id="pais" 
@@ -201,7 +211,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="departamento">Departamento:</label>
                     <input 
                     type="text" 
@@ -212,7 +222,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="municipio">Municipio:</label>
                     <input 
                     type="text" 
@@ -223,7 +233,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
-                <div class="input-group">
+                <div className="input-group">
                     <label htmlFor="direccion">Dirección:</label>
                     <input 
                     type="text" 
@@ -238,10 +248,15 @@ const Clientes = () => {
                     <button type="submit">Crear Cliente</button>
                 </div>
             </form>
-      
-
-
-<h2>Usuarios Creados</h2>
+            <Modal 
+                show={showModal}
+                handleClose={handleCloseModal}
+                handleConfirm={handleConfirmModal}
+                title="Cliente Creado"
+            >
+                <p>El usuario ha sido creado con éxito. Paso a seguir: la creación del crédito.</p>
+            </Modal>
+            <h2>Usuarios Creados</h2>
 <table>
 <thead>
 <tr>
@@ -285,5 +300,7 @@ const Clientes = () => {
 </div>
 )
 }
+           
 
-export default Clientes
+
+export default Clientes;
