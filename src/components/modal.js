@@ -24,5 +24,4 @@ const Modal = ({ show, handleClose, handleConfirm, title, children }) => {
         </div>
     );
 };
-
 export default Modal;

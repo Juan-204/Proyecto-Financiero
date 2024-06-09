@@ -248,6 +248,7 @@ const Clientes = () => {
                     <button type="submit">Crear Cliente</button>
                 </div>
             </form>
+
             <Modal 
                 show={showModal}
                 handleClose={handleCloseModal}
@@ -256,6 +257,7 @@ const Clientes = () => {
             >
                 <p>El usuario ha sido creado con éxito. Paso a seguir: la creación del crédito.</p>
             </Modal>
+            
             <h2>Usuarios Creados</h2>
 <table>
 <thead>

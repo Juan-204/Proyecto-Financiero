@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+//import React, { useState } from 'react'
 import './Clientes.css'
-import Clientes from './Clientes'
+//import Clientes from './Clientes'
 
 const Creditos = () => {
   return (
