@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Clientes.css';
 import { useNavigate } from 'react-router-dom';
-import Modal from './modal'; // Importa el nuevo componente Modal
+import Modal from './Modal.js'; // Importa el nuevo componente Modal
 
 const Clientes = () => {
     const [formData, setFormData] = useState({
