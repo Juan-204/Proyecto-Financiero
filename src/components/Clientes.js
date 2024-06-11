@@ -257,50 +257,50 @@ const Clientes = () => {
                 <p>El usuario ha sido creado con éxito. Paso a seguir: la creación del crédito.</p>
             </Modal>
             <h2>Usuarios Creados</h2>
-<table>
-<thead>
-<tr>
-<th>Primer Nombre</th>
-<th>Segundo Nombre</th>
-<th>Primer Apellido</th>
-<th>segundo Apellido</th>
-<th>Tipo de Documento</th>
-<th>Numero de Documento</th>
-<th>Fecha de Nacimiento</th>
-<th>Numero de Celular</th>
-<th>Numero de Teléfono</th>
-<th>Correo Electrónico</th>
-<th>Pais</th>
-<th>Departamento</th>
-<th>Municipio</th>
-<th>Dirección</th>
-</tr>
-</thead>
-<tbody>
-{usuarios.map((usuario, index) => (
-<tr key={index}>
-<td>{usuario.primerNombre}</td>
-<td>{usuario.segundoNombre}</td>
-<td>{usuario.primerApellido}</td>
-<td>{usuario.segundoApellido}</td>
-<td>{usuario.tipoDoc}</td>
-<td>{usuario.numeroDocu}</td>
-<td>{usuario.fechaNac}</td>
-<td>{usuario.cel}</td>
-<td>{usuario.tel}</td>
-<td>{usuario.email}</td>
-<td>{usuario.pais}</td>
-<td>{usuario.departamento}</td>
-<td>{usuario.municipio}</td>
-<td>{usuario.direccion}</td>
-</tr>
-))}
-</tbody>
-</table>
-</div>
-)
+                <table>
+                <thead>
+                <tr>
+                <th>Primer Nombre</th>
+                <th>Segundo Nombre</th>
+                <th>Primer Apellido</th>
+                <th>segundo Apellido</th>
+                <th>Tipo de Documento</th>
+                <th>Numero de Documento</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Numero de Celular</th>
+                <th>Numero de Teléfono</th>
+                <th>Correo Electrónico</th>
+                <th>Pais</th>
+                <th>Departamento</th>
+                <th>Municipio</th>
+                <th>Dirección</th>
+                </tr>
+                </thead>
+                <tbody>
+                {usuarios.map((usuario, index) => (
+                <tr key={index}>
+                <td>{usuario.primerNombre}</td>
+                <td>{usuario.segundoNombre}</td>
+                <td>{usuario.primerApellido}</td>
+                <td>{usuario.segundoApellido}</td>
+                <td>{usuario.tipoDoc}</td>
+                <td>{usuario.numeroDocu}</td>
+                <td>{usuario.fechaNac}</td>
+                <td>{usuario.cel}</td>
+                <td>{usuario.tel}</td>
+                <td>{usuario.email}</td>
+                <td>{usuario.pais}</td>
+                <td>{usuario.departamento}</td>
+                <td>{usuario.municipio}</td>
+                <td>{usuario.direccion}</td>
+                </tr>
+                ))}
+                </tbody>
+                </table>
+                </div>
+    )
 }
-           
+
 
 
 export default Clientes;
