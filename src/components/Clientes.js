@@ -77,7 +77,9 @@ const Clientes = () => {
     const handleConfirmModal = () => {
         setShowModal(false);
         navigate('/Creditos'); // Redirigir a la página de créditos
+        setShowModal(true);
     };
+
 
     useEffect(() => {
         const storedUsuarios = localStorage.getItem('usuarios');
