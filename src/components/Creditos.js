@@ -149,29 +149,31 @@ const Creditos = () => {
           </button>
         </div>
       </form>
-      <h2>Usuarios Creados</h2>
-                <table>
-                <thead>
-                <tr>
-                <th>Nombre Completo</th>
-                <th>Identificación</th>
-                <th>Monto Del Credito</th>
-                <th>Plazo De Las Cuotas</th>
-                <th>Fecha de Solicitud</th>
-                </tr>
-                </thead>
-                <tbody>
-                {Credito.map((creditos, index) => (
+      <div className='table'>
+      <h2>Creditos Creados</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre Completo</th>
+              <th>Identificación</th>
+              <th>Monto Del Credito</th>
+              <th>Plazo De Las Cuotas</th>
+              <th>Fecha de Solicitud</th>
+            </tr>
+            </thead>
+            <tbody>
+              {Credito.map((creditos, index) => (
                 <tr key={index}>
-                <td>{creditos.nomCompleto}</td>
-                <td>{creditos.id}</td>
-                <td>{creditos.montoCredito}</td>
-                <td>{creditos.plazoCuotas}</td>
-                <td>{creditos.fechaSolicitud}</td>
+                  <td>{creditos.nomCompleto}</td>
+                  <td>{creditos.id}</td>
+                  <td>{creditos.montoCredito}</td>
+                  <td>{creditos.plazoCuotas}</td>
+                  <td>{creditos.fechaSolicitud}</td>
                 </tr>
-                ))}
-                </tbody>
-                </table>
+              ))}
+            </tbody>
+        </table>
+      </div>
     </div>
   );
 };
