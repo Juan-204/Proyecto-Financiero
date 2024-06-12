@@ -319,7 +319,7 @@ const Clientes = () => {
                 ))}
                 </tbody>
                 </table>
-                </div>
+        </div>
     )
 }
 
