@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Clientes.css';
 import { useNavigate } from 'react-router-dom';
-import Modal from './modal'; // Importa el nuevo componente Modal
+import Modal from './Modal.js'; // Importa el nuevo componente Modal
 
 const Clientes = () => {
     const [formData, setFormData] = useState({
@@ -77,6 +77,16 @@ const Clientes = () => {
     const handleConfirmModal = () => {
         setShowModal(false);
         navigate('/Creditos'); // Redirigir a la página de créditos
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
+    const handleConfirmModal = () => {
+        setShowModal(false);
+        navigate('/Creditos'); // Redirigir a la página de créditos
     };
 
     useEffect(() => {
@@ -90,6 +100,7 @@ const Clientes = () => {
         <div className='formulario'>
             <h2>Formulario de Creación de Usuario</h2>
             <form onSubmit={handleSubmit}>
+                <div className="input-group">
                 <div className="input-group">
                     <label htmlFor='primerNombre'>Primer Nombre:</label>
                     <input 
@@ -112,6 +123,7 @@ const Clientes = () => {
                     />
                 </div>
                 <div className="input-group">
+                <div className="input-group">
                     <label htmlFor="primerApellido">Primer Apellido:</label>
                     <input 
                     type="text" 
@@ -132,6 +144,7 @@ const Clientes = () => {
                     onChange={handleChange}
                     />
                 </div>
+                <div className="input-group">
                 <div className="input-group">
                     <label htmlFor="tipoDoc">Tipo De Documento</label>
                     <select 
@@ -157,6 +170,7 @@ const Clientes = () => {
                     />
                 </div>
                 <div className="input-group">
+                <div className="input-group">
                     <label htmlFor="fechaNac">Fecha de Nacimiento:</label>
                     <input 
                     type="date" 
@@ -167,6 +181,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
+                <div className="input-group">
                 <div className="input-group">
                     <label htmlFor="cel">Número de Celular:</label>
                     <input 
@@ -179,6 +194,7 @@ const Clientes = () => {
                     />
                 </div>
                 <div className="input-group">
+                <div className="input-group">
                     <label htmlFor="tel">Número de Teléfono:</label>
                     <input 
                     type="number"
@@ -189,6 +205,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
+                <div className="input-group">
                 <div className="input-group">
                     <label htmlFor="email">Correo Electrónico:</label>
                     <input 
@@ -202,6 +219,8 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <label htmlFor="pais">Pais:</label>
+                <div className="input-group">
+                    <label htmlFor="pais">Pais:</label>
                     <input 
                     type="text" 
                     id="pais" 
@@ -211,6 +230,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
+                <div className="input-group">
                 <div className="input-group">
                     <label htmlFor="departamento">Departamento:</label>
                     <input 
@@ -223,6 +243,7 @@ const Clientes = () => {
                     />
                 </div>
                 <div className="input-group">
+                <div className="input-group">
                     <label htmlFor="municipio">Municipio:</label>
                     <input 
                     type="text" 
@@ -233,6 +254,7 @@ const Clientes = () => {
                     required
                     />
                 </div>
+                <div className="input-group">
                 <div className="input-group">
                     <label htmlFor="direccion">Dirección:</label>
                     <input 
@@ -248,7 +270,6 @@ const Clientes = () => {
                     <button type="submit">Crear Cliente</button>
                 </div>
             </form>
-
             <Modal 
                 show={showModal}
                 handleClose={handleCloseModal}
@@ -257,52 +278,51 @@ const Clientes = () => {
             >
                 <p>El usuario ha sido creado con éxito. Paso a seguir: la creación del crédito.</p>
             </Modal>
-            
             <h2>Usuarios Creados</h2>
-<table>
-<thead>
-<tr>
-<th>Primer Nombre</th>
-<th>Segundo Nombre</th>
-<th>Primer Apellido</th>
-<th>segundo Apellido</th>
-<th>Tipo de Documento</th>
-<th>Numero de Documento</th>
-<th>Fecha de Nacimiento</th>
-<th>Numero de Celular</th>
-<th>Numero de Teléfono</th>
-<th>Correo Electrónico</th>
-<th>Pais</th>
-<th>Departamento</th>
-<th>Municipio</th>
-<th>Dirección</th>
-</tr>
-</thead>
-<tbody>
-{usuarios.map((usuario, index) => (
-<tr key={index}>
-<td>{usuario.primerNombre}</td>
-<td>{usuario.segundoNombre}</td>
-<td>{usuario.primerApellido}</td>
-<td>{usuario.segundoApellido}</td>
-<td>{usuario.tipoDoc}</td>
-<td>{usuario.numeroDocu}</td>
-<td>{usuario.fechaNac}</td>
-<td>{usuario.cel}</td>
-<td>{usuario.tel}</td>
-<td>{usuario.email}</td>
-<td>{usuario.pais}</td>
-<td>{usuario.departamento}</td>
-<td>{usuario.municipio}</td>
-<td>{usuario.direccion}</td>
-</tr>
-))}
-</tbody>
-</table>
-</div>
-)
+                <table>
+                <thead>
+                <tr>
+                <th>Primer Nombre</th>
+                <th>Segundo Nombre</th>
+                <th>Primer Apellido</th>
+                <th>segundo Apellido</th>
+                <th>Tipo de Documento</th>
+                <th>Numero de Documento</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Numero de Celular</th>
+                <th>Numero de Teléfono</th>
+                <th>Correo Electrónico</th>
+                <th>Pais</th>
+                <th>Departamento</th>
+                <th>Municipio</th>
+                <th>Dirección</th>
+                </tr>
+                </thead>
+                <tbody>
+                {usuarios.map((usuario, index) => (
+                <tr key={index}>
+                <td>{usuario.primerNombre}</td>
+                <td>{usuario.segundoNombre}</td>
+                <td>{usuario.primerApellido}</td>
+                <td>{usuario.segundoApellido}</td>
+                <td>{usuario.tipoDoc}</td>
+                <td>{usuario.numeroDocu}</td>
+                <td>{usuario.fechaNac}</td>
+                <td>{usuario.cel}</td>
+                <td>{usuario.tel}</td>
+                <td>{usuario.email}</td>
+                <td>{usuario.pais}</td>
+                <td>{usuario.departamento}</td>
+                <td>{usuario.municipio}</td>
+                <td>{usuario.direccion}</td>
+                </tr>
+                ))}
+                </tbody>
+                </table>
+                </div>
+    )
 }
-           
+
 
 
 export default Clientes;

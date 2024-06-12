@@ -2,28 +2,29 @@ import React, { useEffect } from 'react';
 import './Clientes.css'
 
 const PaymentForm = () => {
-  useEffect(() => {
-    const paymentTypeInputs = document.getElementsByName('paymentType');
+  const handlePaymentTypeChange = (event) => {
+    const value = event.target.value;
     const amountDueSection = document.getElementById('amountDueSection');
     const totalPaymentSection = document.getElementById('totalPaymentSection');
     const abonoSection = document.getElementById('abonoSection');
 
-    const handlePaymentTypeChange = (event) => {
-      const value = event.target.value;
-      if (value === 'cuota') {
-        amountDueSection.style.display = 'block';
-        totalPaymentSection.style.display = 'none';
-        abonoSection.style.display = 'none';
-      } else if (value === 'total') {
-        amountDueSection.style.display = 'none';
-        totalPaymentSection.style.display = 'block';
-        abonoSection.style.display = 'none';
-      } else if (value === 'abono') {
-        amountDueSection.style.display = 'none';
-        totalPaymentSection.style.display = 'none';
-        abonoSection.style.display = 'block';
-      }
-    };
+    if (value === 'cuota') {
+      amountDueSection.style.display = 'block';
+      totalPaymentSection.style.display = 'none';
+      abonoSection.style.display = 'none';
+    } else if (value === 'total') {
+      amountDueSection.style.display = 'none';
+      totalPaymentSection.style.display = 'block';
+      abonoSection.style.display = 'none';
+    } else if (value === 'abono') {
+      amountDueSection.style.display = 'none';
+      totalPaymentSection.style.display = 'none';
+      abonoSection.style.display = 'block';
+    }
+  };
+
+  useEffect(() => {
+    const paymentTypeInputs = document.getElementsByName('paymentType');
 
     paymentTypeInputs.forEach((input) => {
       input.addEventListener('change', handlePaymentTypeChange);
@@ -36,10 +37,44 @@ const PaymentForm = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Cargar datos del localStorage al montar el componente
+    const storedFormData = JSON.parse(localStorage.getItem('formData'));
+    if (storedFormData) {
+      document.getElementById('documento').value = storedFormData.documento || '';
+      document.getElementById('nombre').value = storedFormData.nombre || '';
+      document.getElementById('credito').value = storedFormData.credito || '';
+      document.getElementById('fecha').value = storedFormData.fecha || '';
+      document.querySelector(`input[name="paymentType"][value="${storedFormData.paymentType}"]`).checked = true;
+      handlePaymentTypeChange({ target: { value: storedFormData.paymentType } });
+      if (storedFormData.paymentType === 'abono') {
+        document.getElementById('abonoAmount').value = storedFormData.abonoAmount || '';
+      }
+    }
+  }, []);
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    const formData = {
+      documento: document.getElementById('documento').value,
+      nombre: document.getElementById('nombre').value,
+      credito: document.getElementById('credito').value,
+      fecha: document.getElementById('fecha').value,
+      paymentType: document.querySelector('input[name="paymentType"]:checked').value,
+    };
+    if (formData.paymentType === 'abono') {
+      formData.abonoAmount = document.getElementById('abonoAmount').value;
+    }
+    localStorage.setItem('formData', JSON.stringify(formData));
+    alert('Pago exitoso');
+    document.getElementById('formulario').reset();
+    handlePaymentTypeChange({ target: { value: 'abono' } });
+  };
+
   return (
     <div className='formulario'>
       <h2>Formulario de Pagos</h2>
-      <form id="formulario" action="#" method="post">
+      <form id="formulario" action="#" method="post" onSubmit={handleFormSubmit}>
         <div className="input-group">
           <label htmlFor="documento">Número de Documento:</label>
           <input type="text" id="documento" required />
@@ -81,10 +116,10 @@ const PaymentForm = () => {
           <input type="date" id="fecha" name="fecha" required />
         </div>
         <div className="input-group">
-          <button type="submit">Crear Crédito</button>
+          <button type="submit">Generar Pago</button>
         </div>
         <div className="input-group">
-          <button id="consultar-credito-btn">Consultar Crédito</button>
+          <button id="consultar-credito-btn" type="button">Generar Reporte</button>
         </div>
       </form>
     </div>
