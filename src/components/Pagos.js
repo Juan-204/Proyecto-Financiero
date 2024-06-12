@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Clientes.css'
-
 const PaymentForm = () => {
+  const [formData, setFormData] = useState([]);
+  const [showTable, setShowTable] = useState(false);
+
   const handlePaymentTypeChange = (event) => {
     const value = event.target.value;
     const amountDueSection = document.getElementById('amountDueSection');
@@ -39,36 +41,41 @@ const PaymentForm = () => {
 
   useEffect(() => {
     // Cargar datos del localStorage al montar el componente
-    const storedFormData = JSON.parse(localStorage.getItem('formData'));
-    if (storedFormData) {
-      document.getElementById('documento').value = storedFormData.documento || '';
-      document.getElementById('nombre').value = storedFormData.nombre || '';
-      document.getElementById('credito').value = storedFormData.credito || '';
-      document.getElementById('fecha').value = storedFormData.fecha || '';
-      document.querySelector(`input[name="paymentType"][value="${storedFormData.paymentType}"]`).checked = true;
-      handlePaymentTypeChange({ target: { value: storedFormData.paymentType } });
-      if (storedFormData.paymentType === 'abono') {
-        document.getElementById('abonoAmount').value = storedFormData.abonoAmount || '';
-      }
-    }
+    const storedFormData = JSON.parse(localStorage.getItem('formData')) || [];
+    setFormData(storedFormData);
+
+    // Restablecer el formulario al montar el componente
+    document.getElementById('formulario').reset(); // Limpiar el formulario
+    handlePaymentTypeChange({ target: { value: 'cuota' } }); // Restablecer las secciones a su estado inicial
   }, []);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    const formData = {
+    const newFormData = {
       documento: document.getElementById('documento').value,
       nombre: document.getElementById('nombre').value,
       credito: document.getElementById('credito').value,
       fecha: document.getElementById('fecha').value,
       paymentType: document.querySelector('input[name="paymentType"]:checked').value,
     };
-    if (formData.paymentType === 'abono') {
-      formData.abonoAmount = document.getElementById('abonoAmount').value;
+    if (newFormData.paymentType === 'abono') {
+      newFormData.abonoAmount = document.getElementById('abonoAmount').value;
     }
-    localStorage.setItem('formData', JSON.stringify(formData));
+
+    const updatedFormData = [...formData, newFormData];
+    localStorage.setItem('formData', JSON.stringify(updatedFormData));
     alert('Pago exitoso');
+
+    // Limpiar el formulario
     document.getElementById('formulario').reset();
-    handlePaymentTypeChange({ target: { value: 'abono' } });
+    handlePaymentTypeChange({ target: { value: 'cuota' } });
+
+    // Actualizar el estado con los nuevos datos del formulario
+    setFormData(updatedFormData);
+  };
+
+  const handleGenerateReport = () => {
+    setShowTable(true);
   };
 
   return (
@@ -119,9 +126,39 @@ const PaymentForm = () => {
           <button type="submit">Generar Pago</button>
         </div>
         <div className="input-group">
-          <button id="consultar-credito-btn" type="button">Generar Reporte</button>
+          <button id="consultar-credito-btn" type="button" onClick={handleGenerateReport}>Generar Reporte</button>
         </div>
       </form>
+      
+      {showTable && formData.length > 0 && (
+        <div>
+          <h2>Datos del Pago</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Número de Documento</th>
+                <th>Nombre Completo</th>
+                <th>Número de Crédito</th>
+                <th>Tipo de Pago</th>
+                <th>Monto a Pagar / Abonar</th>
+                <th>Fecha de Pago</th>
+              </tr>
+            </thead>
+            <tbody>
+              {formData.map((data, index) => (
+                <tr key={index}>
+                  <td>{data.documento}</td>
+                  <td>{data.nombre}</td>
+                  <td>{data.credito}</td>
+                  <td>{data.paymentType}</td>
+                  <td>{data.paymentType === 'cuota' ? 5000 : data.paymentType === 'total' ? 20000 : data.abonoAmount}</td>
+                  <td>{data.fecha}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
