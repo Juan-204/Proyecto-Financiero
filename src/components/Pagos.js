@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import './Clientes.css'
+import './Clientes.css';
+
 const PaymentForm = () => {
   const [formData, setFormData] = useState([]);
   const [showTable, setShowTable] = useState(false);
+  const [documento, setDocumento] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [numCredito, setNumCredito] = useState('')
 
   const handlePaymentTypeChange = (event) => {
     const value = event.target.value;
@@ -52,8 +56,8 @@ const PaymentForm = () => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const newFormData = {
-      documento: document.getElementById('documento').value,
-      nombre: document.getElementById('nombre').value,
+      documento: documento,
+      nombre: nombre,
       credito: document.getElementById('credito').value,
       fecha: document.getElementById('fecha').value,
       paymentType: document.querySelector('input[name="paymentType"]:checked').value,
@@ -67,7 +71,7 @@ const PaymentForm = () => {
     alert('Pago exitoso');
 
     // Limpiar el formulario
-    document.getElementById('formulario').reset();
+    document.getElementById('formulario').reset()
     handlePaymentTypeChange({ target: { value: 'cuota' } });
 
     // Actualizar el estado con los nuevos datos del formulario
@@ -78,21 +82,49 @@ const PaymentForm = () => {
     setShowTable(true);
   };
 
+  const handleDocumentoChange = (event) => {
+    const newDocumento = event.target.value;
+    setDocumento(newDocumento);
+
+    // Buscar en el localStorage por la identificación proporcionada
+    const storedUsuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    const storedCredito = JSON.parse(localStorage.getItem('credito')) || [];
+    const usuario = storedUsuarios.find((user) => user.numeroDocu === newDocumento);
+    const credito = storedCredito.find((cred) => cred.id === newDocumento)
+
+    if (usuario) {
+      const nombreCompleto = `${usuario.primerNombre} ${usuario.segundoNombre} ${usuario.primerApellido} ${usuario.segundoApellido}`;
+      setNombre(nombreCompleto);
+    } else {
+      setNombre('Usuario no encontrado');
+    }
+
+    if (credito) {
+      const numberCredit = `${credito.numeroCredito}`;
+      setNumCredito(numberCredit);
+    } else {
+      setNumCredito('0');
+    }
+
+  };
+
+  
+
   return (
     <div className='formulario'>
       <h2>Formulario de Pagos</h2>
       <form id="formulario" action="#" method="post" onSubmit={handleFormSubmit}>
         <div className="input-group">
           <label htmlFor="documento">Número de Documento:</label>
-          <input type="text" id="documento" required />
+          <input type="text" id="documento" value={documento} onChange={handleDocumentoChange} required />
         </div>
         <div className="input-group">
           <label htmlFor="nombre">Nombre Completo:</label>
-          <input type="text" id="nombre" required />
+          <input type="text" id="nombre" value={nombre} readOnly />
         </div>
         <div className="input-group">
           <label htmlFor="credito">Número de Crédito:</label>
-          <input type="number" id="credito" name="credito" required />
+          <input type="number" id="credito" value={numCredito} readOnly/>
         </div>
         <fieldset>
           <legend>Tipo de Pago:</legend>
