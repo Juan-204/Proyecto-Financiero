@@ -1,12 +1,11 @@
 .formulario {
-    display: inline-block;
     margin: 100px 190px 100px 190px;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 1250px;
-    width: 100%;
+    width: 1250px;
 }
 
 h2 {
@@ -51,7 +50,6 @@ form {
     display: flex;
     justify-content: center;
     margin-top: 20px;
-  
 }
 
 .input-group button:hover {
@@ -82,6 +80,7 @@ form {
         flex: 1 1 30%; /* Take 30% of the container's width */
         margin: 10px 1%; /* Add some margin for spacing */
     }
+
 }
 
 /* Modal.css */

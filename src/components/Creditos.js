@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import  Accordion  from './Acordeon';
 import './Clientes.css';
 
 const Creditos = () => {
   const [identificacion, setIdentificacion] = useState('');
   const [nombreCompleto, setNombreCompleto] = useState('');
-
+  const [Credito, setCredito] = useState([]);
+  const [consultaId, setConsultaId] = useState('');
+  const [creditosFiltrados, setCreditosFiltrados] = useState([])
   const [formData, setFormData] = useState({
     nomCompleto: '',
     id: '',
@@ -13,15 +16,13 @@ const Creditos = () => {
     fechaSolicitud: '',
   });
 
-  const [Credito, setCredito] = useState([]);
-
   useEffect(() => {
     const storedCreditos = localStorage.getItem('credito');
     if (storedCreditos) {
       setCredito(JSON.parse(storedCreditos));
     }
   }, []);
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -38,16 +39,28 @@ const Creditos = () => {
       return;
     }
 
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    var numeroRand =  Math.floor(Math.random() *10000) +1;
+    var estado = ''
+
+    if(randomNumber < 50){
+      estado = 'Denegado'
+    } else {
+      estado = 'Aprobado'
+    }
+
     const updatedFormData = {
       ...formData,
       nomCompleto: nombreCompleto,
-      id: identificacion
+      id: identificacion,
+      numeroRandom: randomNumber,
+      estadoCredito: estado,
+      numeroCredito: numeroRand
     };
 
     const newCredito = [...Credito, updatedFormData];
     setCredito(newCredito);
     localStorage.setItem('credito', JSON.stringify(newCredito));
-
     setFormData({
       nomCompleto: '',
       id: '',
@@ -82,10 +95,31 @@ const Creditos = () => {
     }
   };
 
+  const handleChangeConsultaId = (e) => {
+    setConsultaId(e.target.value);
+  }
+
+  const handleConsultarCredito = (e) => {
+    e.preventDefault()
+    if (consultaId) {
+      const credEncontrados = Credito.filter(credito => credito.id === consultaId)
+      setCreditosFiltrados(credEncontrados)
+    } else{
+      setCreditosFiltrados([])
+    }
+    document.getElementById('consultar-credito').reset()
+  }
+
+
+
+
+
+  
   return (
+    //creacion de credito
     <div className='formulario'>
-      <h2>Formulario Creación de Crédito</h2>
-      <form id="crear-credito-form" onSubmit={handleSubmit}>
+      <Accordion title="Crear Credito">
+            <form id="crear-credito-form" onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="nombre">Nombre Completo:</label>
           <input
@@ -144,39 +178,102 @@ const Creditos = () => {
           </button>
         </div>
         <div className="input-group">
-          <button type="button" onClick={handleConsultar}>
+          <button type="button" onClick={handleConsultar} >
             Consultar Usuario
           </button>
-        </div>
+        </div> 
       </form>
-      <div className='table'>
-      <h2>Creditos Creados</h2>
+      </Accordion>
+
+    {/* consulta de creditos*/}
+
+    <Accordion title="Consultar Credito">
+      <form id="consultar-credito" action="#" method="post" onSubmit={handleConsultarCredito}>
+        <div className="input-group">
+          <label htmlFor="identificacion">Identificación:</label>
+          <input
+            type="text"
+            id="identificacion"
+            value={consultaId}
+            onChange={handleChangeConsultaId}
+          />
+        </div>
+        <div className="input-group">
+          <button type="submit">
+            Consultar Usuario
+          </button>
+        </div> 
+      </form>
+      {creditosFiltrados.length > 0 && (
+        <div className='table'>
+        <h2>Creditos Creados</h2>
         <table>
           <thead>
             <tr>
+              <th>#</th>
               <th>Nombre Completo</th>
               <th>Identificación</th>
               <th>Monto Del Credito</th>
               <th>Plazo De Las Cuotas</th>
               <th>Fecha de Solicitud</th>
+              <th>Puntaje</th>
+              <th>Estado</th>
             </tr>
-            </thead>
-            <tbody>
-              {Credito.map((creditos, index) => (
-                <tr key={index}>
-                  <td>{creditos.nomCompleto}</td>
-                  <td>{creditos.id}</td>
-                  <td>{creditos.montoCredito}</td>
-                  <td>{creditos.plazoCuotas}</td>
-                  <td>{creditos.fechaSolicitud}</td>
-                </tr>
-              ))}
-            </tbody>
+          </thead>
+          <tbody>
+            {creditosFiltrados.map((creditos, index) => (
+              <tr key={index}>
+                <td>{creditos.numeroCredito}</td>
+                <td>{creditos.nomCompleto}</td>
+                <td>{creditos.id}</td>
+                <td>{creditos.montoCredito}</td>
+                <td>{creditos.plazoCuotas}</td>
+                <td>{creditos.fechaSolicitud}</td>
+                <td>{creditos.numeroRandom}</td>
+                <td>{creditos.estadoCredito}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
+      )}
+    </Accordion>
+
+      {/*
+      <div className='table'>
+        <h2>Creditos Creados</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nombre Completo</th>
+              <th>Identificación</th>
+              <th>Monto Del Credito</th>
+              <th>Plazo De Las Cuotas</th>
+              <th>Fecha de Solicitud</th>
+              <th>Puntaje</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Credito.map((creditos, index) => (
+              <tr key={index}>
+                <td>{creditos.numeroCredito}</td>
+                <td>{creditos.nomCompleto}</td>
+                <td>{creditos.id}</td>
+                <td>{creditos.montoCredito}</td>
+                <td>{creditos.plazoCuotas}</td>
+                <td>{creditos.fechaSolicitud}</td>
+                <td>{creditos.numeroRandom}</td>
+                <td>{creditos.estadoCredito}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      */}
     </div>
   );
 };
 
 export default Creditos;
-

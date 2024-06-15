@@ -1,0 +1,23 @@
+.accordion{
+    border: 1px solid black;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.accordion-header {
+    background-color: #f7f7f7;
+    padding: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.accordion-header h3 {
+    margin: 0;
+}
+
+.accordion-contest{
+    padding: 15px;
+    border-top: 1px solid black;
+}
