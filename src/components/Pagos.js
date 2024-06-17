@@ -131,8 +131,8 @@ const PaymentForm = () => {
             <input type="radio" name="paymentType" value="cuota" defaultChecked /> Cuota
           </label>
           <div id="amountDueSection">
-            <label htmlFor="amountDue">Monto a Pagar:</label>
-            <input type="text" id="amountDue" name="amountDue" value="500" readOnly />
+            <label htmlFor="amountDue">Monto a pagar: </label>
+            <input type="text" id="amountDue" name="amountDue" value="5000" readOnly />
           </div>
           <label>
             <input type="radio" name="paymentType" value="total" /> Total a Pagar
