@@ -131,14 +131,14 @@ const PaymentForm = () => {
             <input type="radio" name="paymentType" value="cuota" defaultChecked /> Cuota
           </label>
           <div id="amountDueSection">
-            <label htmlFor="amountDue">Monto a Pagar:</label>
+            <label htmlFor="amountDue">Monto a pagar: </label>
             <input type="text" id="amountDue" name="amountDue" value="5000" readOnly />
           </div>
           <label>
             <input type="radio" name="paymentType" value="total" /> Total a Pagar
           </label>
           <div id="totalPaymentSection" style={{ display: 'none' }}>
-            <label htmlFor="totalPayment">Total del Crédito:</label>
+            <label htmlFor="totalPayment">Total del crédito: </label>
             <input type="text" id="totalPayment" name="totalPayment" value="20000" readOnly />
           </div>
           <label>
