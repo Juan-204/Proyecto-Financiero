@@ -16,7 +16,7 @@ function App() {
           <Routes>
             <Route path='/clientes' Component={Clientes}></Route>
             <Route path='/creditos' Component={Creditos}></Route>
-            <Route path='/pagos/:numeroCredito' Component={Pagos}></Route> {/* Ruta modificada */}
+            <Route path='/pagos/:numeroCredito' Component={Pagos}></Route>
           </Routes>
         </div>
       </Router>

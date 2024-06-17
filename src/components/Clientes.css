@@ -1,11 +1,12 @@
 .formulario {
-    margin: 100px 190px 100px 190px;
+    margin: 50px auto ;
+    margin-left: 200px;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 1250px;
-    width: 1250px;
+    max-width: 90%;
+    width: 700px;
 }
 
 h2 {
@@ -20,8 +21,9 @@ form {
 }
 
 .input-group {
-    width: 100%;
+    width: calc(50% - 10px);
     margin: 10px 0;
+    box-sizing: border-box;
 }
 
 .input-group label {
@@ -36,11 +38,12 @@ form {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
-
 .input-group button {
-    padding: 10px 20px;
+    width: 100%;
+    padding: 10px;
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -52,38 +55,21 @@ form {
     margin-top: 20px;
 }
 
-.input-group button:hover {
-    background-color: #0056b3;
-}
-
-/* Media Queries for responsiveness */
-
-@media (min-width: 600px) {
+@media (max-width: 768px) {
     .input-group {
-        flex: 1 1 48%; /* Take 48% of the container's width */
-        margin: 10px 1%; /* Add some margin for spacing */
-    }
-
-    .input-group input,
-    .input-group select {
         width: 100%;
+        margin: 10px 0;
     }
 }
 
-@media (min-width: 900px) {
-    form {
-        width: 80%;
-        margin: 0 auto;
+@media (max-width: 600px) {
+    .formulario {
+        width: 90%;
+        max-width: 100%;
     }
-
-    .input-group {
-        flex: 1 1 30%; /* Take 30% of the container's width */
-        margin: 10px 1%; /* Add some margin for spacing */
-    }
-
 }
 
-/* Modal.css */
+/* Estilos para el modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -102,8 +88,8 @@ form {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    max-width: 500px;
-    width: 100%;
+    max-width: 90%;
+    width: 400px;
 }
 
 .modal-header h2 {
@@ -130,16 +116,20 @@ form {
     font-size: 16px;
 }
 
-.modal-footer button:hover {
-    background-color: #0056b3;
+/* Estilos para la tabla */
+.table {
+    margin: 20px auto;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
-.table, table {
-    align-items: center;
-    margin: 0 auto;
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-table, th, td {
-    border: 1px solid;
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
     text-align: center;
 }
