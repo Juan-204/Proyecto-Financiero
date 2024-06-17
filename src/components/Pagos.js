@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './Clientes.css';
 
 const PaymentForm = () => {
+  const location = useLocation();
+  console.log('Location state:', location.state);
+  const { numeroCredito, nombreCompleto, identificacion } = location.state || {};
+
   const [formData, setFormData] = useState([]);
   const [showTable, setShowTable] = useState(false);
-  const [documento, setDocumento] = useState('');
-  const [nombre, setNombre] = useState('');
-  const [numCredito, setNumCredito] = useState('')
+  const [documento, setDocumento] = useState(identificacion || '');
+  const [nombre, setNombre] = useState(nombreCompleto || '');
+  const [numCredito, setNumCredito] = useState(numeroCredito || '');
 
   const handlePaymentTypeChange = (event) => {
     const value = event.target.value;
@@ -71,15 +76,12 @@ const PaymentForm = () => {
     alert('Pago exitoso');
 
     // Limpiar el formulario
-    document.getElementById('formulario').reset()
+    document.getElementById('formulario').reset();
     handlePaymentTypeChange({ target: { value: 'cuota' } });
 
     // Actualizar el estado con los nuevos datos del formulario
     setFormData(updatedFormData);
-  };
-
-  const handleGenerateReport = () => {
-    setShowTable(true);
+    setShowTable(true); // Mostrar la tabla de detalles del pago
   };
 
   const handleDocumentoChange = (event) => {
@@ -90,7 +92,7 @@ const PaymentForm = () => {
     const storedUsuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
     const storedCredito = JSON.parse(localStorage.getItem('credito')) || [];
     const usuario = storedUsuarios.find((user) => user.numeroDocu === newDocumento);
-    const credito = storedCredito.find((cred) => cred.id === newDocumento)
+    const credito = storedCredito.find((cred) => cred.id === newDocumento);
 
     if (usuario) {
       const nombreCompleto = `${usuario.primerNombre} ${usuario.segundoNombre} ${usuario.primerApellido} ${usuario.segundoApellido}`;
@@ -105,10 +107,7 @@ const PaymentForm = () => {
     } else {
       setNumCredito('0');
     }
-
   };
-
-  
 
   return (
     <div className='formulario'>
@@ -116,15 +115,15 @@ const PaymentForm = () => {
       <form id="formulario" action="#" method="post" onSubmit={handleFormSubmit}>
         <div className="input-group">
           <label htmlFor="documento">Número de Documento:</label>
-          <input type="text" id="documento" value={documento} onChange={handleDocumentoChange} required />
+          <input type="text" id="documento" value={identificacion} onChange={handleDocumentoChange} required />
         </div>
         <div className="input-group">
           <label htmlFor="nombre">Nombre Completo:</label>
-          <input type="text" id="nombre" value={nombre} readOnly />
+          <input type="text" id="nombre" value={nombreCompleto} readOnly  />
         </div>
         <div className="input-group">
           <label htmlFor="credito">Número de Crédito:</label>
-          <input type="number" id="credito" value={numCredito} readOnly/>
+          <input type="number" id="credito" value={numCredito} readOnly />
         </div>
         <fieldset>
           <legend>Tipo de Pago:</legend>
@@ -158,39 +157,39 @@ const PaymentForm = () => {
           <button type="submit">Generar Pago</button>
         </div>
         <div className="input-group">
-          <button id="consultar-credito-btn" type="button" onClick={handleGenerateReport}>Generar Reporte</button>
+          <button id="consultar-credito-btn" type="button" onClick={() => setShowTable(true)}>Generar Reporte</button>
         </div>
-      </form>
-      
-      {showTable && formData.length > 0 && (
-        <div>
-          <h2>Datos del Pago</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Número de Documento</th>
-                <th>Nombre Completo</th>
-                <th>Número de Crédito</th>
-                <th>Tipo de Pago</th>
-                <th>Monto a Pagar / Abonar</th>
-                <th>Fecha de Pago</th>
-              </tr>
-            </thead>
-            <tbody>
-              {formData.map((data, index) => (
-                <tr key={index}>
-                  <td>{data.documento}</td>
-                  <td>{data.nombre}</td>
-                  <td>{data.credito}</td>
-                  <td>{data.paymentType}</td>
-                  <td>{data.paymentType === 'cuota' ? 5000 : data.paymentType === 'total' ? 20000 : data.abonoAmount}</td>
-                  <td>{data.fecha}</td>
+
+        {showTable && formData.length > 0 && (
+          <div>
+            <h2>Datos del Pago</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Número de Documento</th>
+                  <th>Nombre Completo</th>
+                  <th>Número de Crédito</th>
+                  <th>Tipo de Pago</th>
+                  <th>Monto a Pagar / Abonar</th>
+                  <th>Fecha de Pago</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody>
+                {formData.map((data, index) => (
+                  <tr key={index}>
+                    <td>{data.documento}</td>
+                    <td>{data.nombre}</td>
+                    <td>{data.credito}</td>
+                    <td>{data.paymentType}</td>
+                    <td>{data.paymentType === 'cuota' ? 5000 : data.paymentType === 'total' ? 20000 : data.abonoAmount}</td>
+                    <td>{data.fecha}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </form>
     </div>
   );
 };

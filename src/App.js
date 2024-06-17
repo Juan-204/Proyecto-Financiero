@@ -5,8 +5,6 @@ import Clientes from './components/Clientes';
 import Creditos from './components/Creditos';
 import Pagos from './components/Pagos';
 
-
-
 function App() {
   return (
     <div className='contenedor'>
@@ -18,7 +16,7 @@ function App() {
           <Routes>
             <Route path='/clientes' Component={Clientes}></Route>
             <Route path='/creditos' Component={Creditos}></Route>
-            <Route path='/pagos' Component={Pagos}></Route>
+            <Route path='/pagos/:numeroCredito' Component={Pagos}></Route> {/* Ruta modificada */}
           </Routes>
         </div>
       </Router>
