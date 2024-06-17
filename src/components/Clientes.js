@@ -23,13 +23,15 @@ const Clientes = () => {
 
     const [usuarios, setUsuarios] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [editingUserId, setEditingUserId] = useState(null); // Nuevo estado para almacenar el ID del usuario en edición
     const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
+            ...prevData,
+            [name]: value,
         }));
     };
 
@@ -48,9 +50,21 @@ const Clientes = () => {
             alert("Por favor, complete todos los campos requeridos.");
             return;
         }
-        const newUsuarios = [...usuarios, formData];
-        setUsuarios(newUsuarios);
-        localStorage.setItem('usuarios', JSON.stringify(newUsuarios));
+
+        if (editMode) {
+            const updatedUsuarios = usuarios.map((usuario) =>
+                usuario.numeroDocu === editingUserId ? { ...formData, numeroDocu: editingUserId } : usuario
+            );
+            setUsuarios(updatedUsuarios);
+            localStorage.setItem('usuarios', JSON.stringify(updatedUsuarios));
+            setEditMode(false);
+            setEditingUserId(null);
+        } else {
+            const newUsuarios = [...usuarios, formData];
+            setUsuarios(newUsuarios);
+            localStorage.setItem('usuarios', JSON.stringify(newUsuarios));
+        }
+
         setFormData({
             primerNombre: '',
             segundoNombre: '',
@@ -77,9 +91,17 @@ const Clientes = () => {
     const handleConfirmModal = () => {
         setShowModal(false);
         navigate('/Creditos'); // Redirigir a la página de créditos
-        setShowModal(true);
     };
 
+    const handleEditar = (userId) => {
+        const usuario = usuarios.find((user) => user.numeroDocu === userId);
+        if (usuario) {
+            setFormData(usuario); // Cargar datos del usuario en el formulario de edición
+            setEditMode(true); // Activar modo de edición
+            setEditingUserId(userId); // Almacenar el ID del usuario en edición
+            setShowModal(true); // Mostrar modal de edición
+        }
+    };
 
     useEffect(() => {
         const storedUsuarios = localStorage.getItem('usuarios');
@@ -96,52 +118,52 @@ const Clientes = () => {
                 <div className="input-group">
                     <label htmlFor='primerNombre'>Primer Nombre:</label>
                     <input 
-                    type="text"
-                    id='primerNombre'
-                    name="primerNombre"
-                    value={formData.primerNombre}
-                    onChange={handleChange} 
-                    required
+                        type="text"
+                        id='primerNombre'
+                        name="primerNombre"
+                        value={formData.primerNombre}
+                        onChange={handleChange} 
+                        required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="segundoNombre">Segundo Nombre:</label>
                     <input 
-                    type="text" 
-                    id="segundoNombre" 
-                    name="segundoNombre"
-                    value={formData.segundoNombre}
-                    onChange={handleChange}
+                        type="text" 
+                        id="segundoNombre" 
+                        name="segundoNombre"
+                        value={formData.segundoNombre}
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="primerApellido">Primer Apellido:</label>
                     <input 
-                    type="text" 
-                    id='primerApellido'
-                    name='primerApellido'
-                    value={formData.primerApellido}
-                    onChange={handleChange} 
-                    required
+                        type="text" 
+                        id='primerApellido'
+                        name='primerApellido'
+                        value={formData.primerApellido}
+                        onChange={handleChange} 
+                        required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="segundoApellido">Segundo Apellido:</label>
                     <input 
-                    type="text" 
-                    id="segundoApellido" 
-                    name="segundoApellido"
-                    value={formData.segundoApellido}
-                    onChange={handleChange}
+                        type="text" 
+                        id="segundoApellido" 
+                        name="segundoApellido"
+                        value={formData.segundoApellido}
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="tipoDoc">Tipo De Documento</label>
                     <select 
-                    name="tipoDoc"
-                    value={formData.tipoDoc}
-                    onChange={handleChange} 
-                    required
+                        name="tipoDoc"
+                        value={formData.tipoDoc}
+                        onChange={handleChange} 
+                        required
                     >
                         <option value="">Seleccione un tipo de documento</option>
                         <option value="DNI">Cedula de Ciudadania</option>
@@ -151,136 +173,137 @@ const Clientes = () => {
                 <div className="input-group">
                     <label htmlFor="numeroDocu">Número de Documento:</label>
                     <input 
-                    type="number" 
-                    id="numeroDocu" 
-                    name="numeroDocu" 
-                    value={formData.numeroDocu}
-                    onChange={handleChange}
-                    required
+                        type="number" 
+                        id="numeroDocu" 
+                        name="numeroDocu" 
+                        value={formData.numeroDocu}
+                        onChange={handleChange}
+                        required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="fechaNac">Fecha de Nacimiento:</label>
                     <input 
-                    type="date" 
-                    id="fechaNac" 
-                    name="fechaNac" 
-                    value={formData.fechaNac}
-                    onChange={handleChange}
-                    required
+                        type="date" 
+                        id="fechaNac" 
+                        name="fechaNac" 
+                        value={formData.fechaNac}
+                        onChange={handleChange}
+                        required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="cel">Número de Celular:</label>
                     <input 
-                    type="number" 
-                    id="cel" 
-                    name="cel" 
-                    value={formData.cel}
-                    onChange={handleChange}
-                    required
+                        type="number" 
+                        id="cel" 
+                        name="cel" 
+                        value={formData.cel}
+                        onChange={handleChange}
+                        required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="tel">Número de Teléfono:</label>
                     <input 
-                    type="number"
-                    id="tel" 
-                    name="tel" 
-                    value={formData.tel}
-                    onChange={handleChange}
-                    required
+                        type="number"
+                        id="tel" 
+                        name="tel" 
+                        value={formData.tel}
+                        onChange={handleChange}
+                        required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="email">Correo Electrónico:</label>
                     <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="pais">Pais:</label>
                     <input 
-                    type="text" 
-                    id="pais" 
-                    name="pais" 
-                    value={formData.pais}
-                    onChange={handleChange}
-                    required
+                        type="text" 
+                        id="pais" 
+                        name="pais" 
+                        value={formData.pais}
+                        onChange={handleChange}
+                        required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="departamento">Departamento:</label>
                     <input 
-                    type="text" 
-                    id="departamento" 
-                    name="departamento" 
-                    value={formData.departamento}
-                    onChange={handleChange}
-                    required
+                        type="text" 
+                        id="departamento" 
+                        name="departamento" 
+                        value={formData.departamento}
+                        onChange={handleChange}
+                        required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="municipio">Municipio:</label>
                     <input 
-                    type="text" 
-                    id="municipio" 
-                    name="municipio"
-                    value={formData.municipio}
-                    onChange={handleChange} 
-                    required
+                        type="text" 
+                        id="municipio" 
+                        name="municipio"
+                        value={formData.municipio}
+                        onChange={handleChange} 
+                        required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="direccion">Dirección:</label>
                     <input 
-                    type="text" 
-                    id="direccion" 
-                    name="direccion" 
-                    value={formData.direccion}
-                    onChange={handleChange}
-                    required
+                        type="text" 
+                        id="direccion" 
+                        name="direccion" 
+                        value={formData.direccion}
+                        onChange={handleChange}
+                        required
                     />
                 </div>
                 <div className="input-group">
-                    <button type="submit">Crear Cliente</button>
+                    <button type="submit">{editMode ? 'Guardar Cambios' : 'Crear Cliente'}</button>
                 </div>
             </form>
             <Modal 
                 show={showModal}
                 handleClose={handleCloseModal}
                 handleConfirm={handleConfirmModal}
-                title="Cliente Creado"
+                title={editMode ? 'Cliente Editado' : 'Cliente Creado'}
             >
-                <p>El usuario ha sido creado con éxito. Paso a seguir: la creación del crédito.</p>
+                <p>El usuario ha sido {editMode ? 'editado' : 'creado'} con éxito. Paso a seguir: la creación del crédito.</p>
             </Modal>
             <div className='table'>
-            <h2>Usuarios Creados</h2>
+                <h2>Usuarios Creados</h2>
                 <table>
-                <thead>
-                <tr>
-                <th>Primer Nombre</th>
-                <th>Segundo Nombre</th>
-                <th>Primer Apellido</th>
-                <th>segundo Apellido</th>
-                <th>Tipo de Documento</th>
-                <th>Numero de Documento</th>
-                <th>Fecha de Nacimiento</th>
-                <th>Numero de Celular</th>
-                <th>Numero de Teléfono</th>
-                <th>Correo Electrónico</th>
-                <th>Pais</th>
-                <th>Departamento</th>
-                <th>Municipio</th>
-                <th>Dirección</th>
-                </tr>
-                </thead>
-                <tbody>
+                    <thead>
+                        <tr>
+                            <th>Primer Nombre</th>
+                            <th>Segundo Nombre</th>
+                            <th>Primer Apellido</th>
+                            <th>Segundo Apellido</th>
+                            <th>Tipo de Documento</th>
+                            <th>Numero de Documento</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Numero de Celular</th>
+                            <th>Numero de Teléfono</th>
+                            <th>Correo Electrónico</th>
+                            <th>Pais</th>
+                            <th>Departamento</th>
+                            <th>Municipio</th>
+                            <th>Dirección</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                 {usuarios.map((usuario, index) => (
                 <tr key={index}>
                 <td>{usuario.primerNombre}</td>
@@ -297,6 +320,9 @@ const Clientes = () => {
                 <td>{usuario.departamento}</td>
                 <td>{usuario.municipio}</td>
                 <td>{usuario.direccion}</td>
+                <td>
+                <button onClick={() => handleEditar(usuario.numeroDocu)}>Editar</button>
+</td>
                 </tr>
                 ))}
                 </tbody>
