@@ -5,12 +5,12 @@ import './Clientes.css';
 const PaymentForm = () => {
   const location = useLocation();
   console.log('Location state:', location.state);
-  const { numeroCredito, nombreCompleto, identificacion } = location.state || {};
+  const { numeroCredito, nomCompleto, identificacion, monto } = location.state || {};
 
   const [formData, setFormData] = useState([]);
   const [showTable, setShowTable] = useState(false);
   const [documento, setDocumento] = useState(identificacion || '');
-  const [nombre, setNombre] = useState(nombreCompleto || '');
+  const [nombre, setNombre] = useState(nomCompleto || '');
   const [numCredito, setNumCredito] = useState(numeroCredito || '');
 
   const handlePaymentTypeChange = (event) => {
@@ -83,7 +83,7 @@ const PaymentForm = () => {
     setFormData(updatedFormData);
     setShowTable(true); // Mostrar la tabla de detalles del pago
   };
-
+/*
   const handleDocumentoChange = (event) => {
     const newDocumento = event.target.value;
     setDocumento(newDocumento);
@@ -108,18 +108,18 @@ const PaymentForm = () => {
       setNumCredito('0');
     }
   };
-
+*/
   return (
     <div className='formulario'>
       <h2>Formulario de Pagos</h2>
       <form id="formulario" action="#" method="post" onSubmit={handleFormSubmit}>
         <div className="input-group">
           <label htmlFor="documento">Número de Documento:</label>
-          <input type="text" id="documento" value={identificacion} onChange={handleDocumentoChange} required />
+          <input type="text" id="documento" value={identificacion} /*onChange={handleDocumentoChange}*/ required />
         </div>
         <div className="input-group">
           <label htmlFor="nombre">Nombre Completo:</label>
-          <input type="text" id="nombre" value={nombreCompleto} readOnly  />
+          <input type="text" id="nombre" value={nomCompleto} readOnly  />
         </div>
         <div className="input-group">
           <label htmlFor="credito">Número de Crédito:</label>
@@ -132,14 +132,14 @@ const PaymentForm = () => {
           </label>
           <div id="amountDueSection">
             <label htmlFor="amountDue">Monto a Pagar:</label>
-            <input type="text" id="amountDue" name="amountDue" value="5000" readOnly />
+            <input type="text" id="amountDue" name="amountDue" value="500" readOnly />
           </div>
           <label>
             <input type="radio" name="paymentType" value="total" /> Total a Pagar
           </label>
           <div id="totalPaymentSection" style={{ display: 'none' }}>
             <label htmlFor="totalPayment">Total del Crédito:</label>
-            <input type="text" id="totalPayment" name="totalPayment" value="20000" readOnly />
+            <input type="text" id="totalPayment" name="totalPayment" value={monto} readOnly />
           </div>
           <label>
             <input type="radio" name="paymentType" value="abono" /> Abono

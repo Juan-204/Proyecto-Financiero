@@ -9,6 +9,7 @@ const Creditos = () => {
   const [Credito, setCredito] = useState([]);
   const [consultaId, setConsultaId] = useState('');
   const [creditosFiltrados, setCreditosFiltrados] = useState([]);
+  const [nombre, setNombre] = useState([]);
   const [formData, setFormData] = useState({
     nomCompleto: '',
     id: '',
@@ -95,8 +96,8 @@ const Creditos = () => {
     const usuario = usuarios.find((user) => user.numeroDocu === identificacion);
 
     if (usuario) {
-      const nombreCompleto = `${usuario.primerNombre} ${usuario.segundoNombre} ${usuario.primerApellido} ${usuario.segundoApellido}`;
-      setNombreCompleto(nombreCompleto);
+      const nombreCom = `${usuario.primerNombre} ${usuario.segundoNombre} ${usuario.primerApellido} ${usuario.segundoApellido}`;
+      setNombreCompleto(nombreCom);
       setFormData((prevData) => ({
         ...prevData,
         nomCompleto: nombreCompleto,
@@ -128,14 +129,23 @@ const Creditos = () => {
    // navigate(`/pagos/${numeroCredito}`);
   //};
 
-  const handlePagar = (numeroCredito) => {
+  const handlePagar = (numeroCredito, id) => {
+    const usuario =  JSON.parse(localStorage.getItem('credito')) || [] 
+    const uss = usuario.find((user) => user.id === id);
+    console.log(uss)
+    const nombre = `${uss.nomCompleto}`;
+    const monto = `${uss.montoCredito}`
+    setNombre(nombre)
+    console.log(nombre)
     navigate(`/pagos/${numeroCredito}`, {
       state: {
         numeroCredito: numeroCredito,
-        nomCompleto: nombreCompleto,
-        identificacion: identificacion
+        nomCompleto: nombre,
+        identificacion: id,
+        monto: monto
       }
     });
+    //console.log(nombreCompleto)
   };
   
 
@@ -264,8 +274,10 @@ const Creditos = () => {
                     <td>{creditos.numeroRandom}</td>
                     <td>{creditos.estadoCredito}</td>
                     <td>
-                    <button onClick={() => handlePagar(creditos.numeroCredito)}>Pagar</button>
-                      <button onClick={() => handleEditar(creditos.numeroCredito)}>Editar</button>
+                      {creditos.estadoCredito === 'Aprobado' && (
+                        <button onClick={() => handlePagar(creditos.numeroCredito, creditos.id)}>Pagar</button>
+                      )}
+                      <button onClick={() => handleEditar(creditos.numeroCredito, creditos.id)}>Editar</button>
                     </td>
                   </tr>
                 ))}
