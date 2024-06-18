@@ -155,10 +155,6 @@ const Clientes = () => {
         
     };
 
-    
-
-
-
     useEffect(() => {
         const storedUsuarios = localStorage.getItem('usuarios');
         if (storedUsuarios) {

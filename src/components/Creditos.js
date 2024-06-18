@@ -113,6 +113,7 @@ const Creditos = () => {
 };
 
 
+
   const handleChangeConsultaId = (e) => {
     setConsultaId(e.target.value);
   };
@@ -154,7 +155,7 @@ const Creditos = () => {
 
   return (
     <div className="formulario">
-     <Accordion title="Crear Crédito">
+      <Accordion title="Crear Crédito">
         <form id="crear-credito-form" onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="nombre">Nombre Completo:</label>

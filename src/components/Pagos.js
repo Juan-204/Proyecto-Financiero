@@ -57,28 +57,30 @@ const PaymentForm = () => {
     handlePaymentTypeChange({ target: { value: 'cuota' } });
   }, []);
 
+  const [currentCreditPayments, setCurrentCreditPayments] = useState([]);
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
-    
+  
     let newTotalCredito = parseFloat(totalCredito);
     let newNumCuotas = numCuotas;
-
-if (paymentType === 'cuota') {
-  newNumCuotas = numCuotas - 1;
-  newTotalCredito = (newTotalCredito - parseFloat(totalCuotas)).toFixed(2);
-} else if (paymentType === 'total') {
-  newTotalCredito = 0;
-  newNumCuotas = 0;
-} else if (paymentType === 'abono') { 
-  const abonoAmount = parseFloat(document.getElementById('abonoAmount').value);
-  const cuotaAmount = parseFloat(totalCuotas) / numCuotas;
-  if (cuotaAmount <= abonoAmount) {
-    newNumCuotas = numCuotas - 1;
-  }
-  newTotalCredito = (newTotalCredito - abonoAmount).toFixed(2);
-}
-
+  
+    if (paymentType === 'cuota') {
+      newNumCuotas = numCuotas - 1;
+      newTotalCredito = (newTotalCredito - parseFloat(totalCuotas)).toFixed(2);
+    } else if (paymentType === 'total') {
+      newTotalCredito = 0;
+      newNumCuotas = 0;
+    } else if (paymentType === 'abono') {
+      const abonoAmount = parseFloat(document.getElementById('abonoAmount').value);
+      const cuotaAmount = parseFloat(totalCuotas) / numCuotas;
+      if (cuotaAmount <= abonoAmount) {
+        newNumCuotas = numCuotas - 1;
+      }
+      newTotalCredito = (newTotalCredito - abonoAmount).toFixed(2);
+    }
+  
     const newFormData = {
       documento: documento,
       nombre: nombre,
@@ -88,11 +90,11 @@ if (paymentType === 'cuota') {
       numcuotas: newNumCuotas,
       toCredito: newTotalCredito,
     };
-
+  
     if (paymentType === 'abono') {
       newFormData.abonoAmount = document.getElementById('abonoAmount').value;
     }
-
+  
     const updatedFormData = [...formData, newFormData];
     localStorage.setItem('formData', JSON.stringify(updatedFormData));
     alert('Pago exitoso');
@@ -101,7 +103,17 @@ if (paymentType === 'cuota') {
     setFormData(updatedFormData);
     setNumCuotas(newNumCuotas);
     setTotalCredito(newTotalCredito);
+  
+    // Filtrar y mostrar solo los pagos relacionados con el número de crédito actual
+    const filteredPayments = updatedFormData.filter(item => item.credito === numCredito);
+    setCurrentCreditPayments(filteredPayments);
     setShowTable(true);
+  };
+  
+  const handleGenerateReport = () => {
+    // Mostrar todos los pagos almacenados
+    setShowTable(true);
+    setCurrentCreditPayments(formData);
   };
 
   return (
@@ -152,42 +164,42 @@ if (paymentType === 'cuota') {
           <button type="submit">Generar Pago</button>
         </div>
         <div className="input-group">
-          <button id="consultar-credito-btn" type="button" onClick={() => setShowTable(true)}>Generar Reporte</button>
+          <button id="consultar-credito-btn" type="button" onClick={handleGenerateReport}>Generar Reporte</button>
         </div>
 
-        {showTable && formData.length > 0 && (
-          <div>
-            <h2>Datos del Pago</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Número de Documento</th>
-                  <th>Nombre Completo</th>
-                  <th>Número de Crédito</th>
-                  <th>Monto Crédito</th>
-                  <th>Tipo de Pago</th>
-                  <th>Monto a Pagar / Abonar</th>
-                  <th>Numero De Cuotas</th>
-                  <th>Fecha de Pago</th>
-                </tr>
-              </thead>
-              <tbody>
-                {formData.map((data, index) => (
-                  <tr key={index}>
-                    <td>{data.documento}</td>
-                    <td>{data.nombre}</td>
-                    <td>{data.credito}</td>
-                    <td>{data.toCredito}</td>
-                    <td>{data.paymentType}</td>
-                    <td>{data.paymentType === 'cuota' ? totalCuotas : data.paymentType === 'total' ? totalCredito : data.abonoAmount}</td>
-                    <td>{data.numcuotas}</td>
-                    <td>{data.fecha}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {showTable && currentCreditPayments.length > 0 && (
+    <div>
+      <h2>Datos del Pago</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Número de Documento</th>
+            <th>Nombre Completo</th>
+            <th>Número de Crédito</th>
+            <th>Monto Crédito</th>
+            <th>Tipo de Pago</th>
+            <th>Monto a Pagar / Abonar</th>
+            <th>Numero De Cuotas</th>
+            <th>Fecha de Pago</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentCreditPayments.map((data, index) => (
+            <tr key={index}>
+              <td>{data.documento}</td>
+              <td>{data.nombre}</td>
+              <td>{data.credito}</td>
+              <td>{data.toCredito}</td>
+              <td>{data.paymentType}</td>
+              <td>{data.paymentType === 'cuota' ? totalCuotas : data.paymentType === 'total' ? totalCredito : data.abonoAmount}</td>
+              <td>{data.numcuotas}</td>
+              <td>{data.fecha}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
       </form>
     </div>
   );
