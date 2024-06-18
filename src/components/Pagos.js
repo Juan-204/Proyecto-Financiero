@@ -12,7 +12,8 @@ const PaymentForm = () => {
   const [documento, setDocumento] = useState(identificacion || '');
   const [nombre, setNombre] = useState(nomCompleto || '');
   const [numCredito, setNumCredito] = useState(numeroCredito || '');
-  const [numCuotas, setNumCuotas] = useState(plazo || 0); // Estado para el número de cuotas
+  const [numCuotas, setNumCuotas] = useState(plazo || 0);
+  const [totalCredito, setTotalCredito] = useState(monto || 0);
 
   const handlePaymentTypeChange = (event) => {
     const value = event.target.value;
@@ -60,10 +61,13 @@ const PaymentForm = () => {
     event.preventDefault();
     const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
 
+    let newTotalCredito = totalCredito
     let newNumCuotas = numCuotas;
     if (paymentType === 'cuota') {
       newNumCuotas = numCuotas - 1;
+      newTotalCredito = totalCredito - totalCuotas
       setNumCuotas(newNumCuotas);
+      setTotalCredito(newTotalCredito)
     }
 
     const newFormData = {
@@ -73,6 +77,7 @@ const PaymentForm = () => {
       fecha: document.getElementById('fecha').value,
       paymentType: paymentType,
       numcuotas: newNumCuotas,
+      toCredito: newTotalCredito
     };
 
     if (paymentType === 'abono') {
@@ -148,6 +153,7 @@ const PaymentForm = () => {
                   <th>Número de Documento</th>
                   <th>Nombre Completo</th>
                   <th>Número de Crédito</th>
+                  <th>Monto Credito</th>
                   <th>Tipo de Pago</th>
                   <th>Monto a Pagar / Abonar</th>
                   <th>Numero De Cuotas</th>
@@ -160,6 +166,7 @@ const PaymentForm = () => {
                     <td>{data.documento}</td>
                     <td>{data.nombre}</td>
                     <td>{data.credito}</td>
+                    <td>{data.toCredito}</td>
                     <td>{data.paymentType}</td>
                     <td>{data.paymentType === 'cuota' ? totalCuotas : data.paymentType === 'total' ? monto : data.abonoAmount}</td>
                     <td>{data.numcuotas}</td>
