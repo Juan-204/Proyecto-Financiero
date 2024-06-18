@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Accordion from './Acordeon';
 import './Clientes.css';
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate para redirección
+import { useNavigate } from 'react-router-dom';
 
 const Creditos = () => {
   const [identificacion, setIdentificacion] = useState('');
   const [nombreCompleto, setNombreCompleto] = useState('');
-  const [nombre, setNombre] = useState('')
+  const [nombre, setNombre] = useState('');
   const [Credito, setCredito] = useState([]);
   const [consultaId, setConsultaId] = useState('');
   const [creditosFiltrados, setCreditosFiltrados] = useState([]);
@@ -20,9 +20,8 @@ const Creditos = () => {
 
   const [editMode, setEditMode] = useState(false);
   const [editingCreditId, setEditingCreditId] = useState(null);
-  
 
-  const navigate = useNavigate(); // Hook para redirección
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedCreditos = localStorage.getItem('credito');
@@ -32,10 +31,10 @@ const Creditos = () => {
   }, []);
 
   const GenerarCuota = (montoCredito, plazoCuotas) => {
-    montoCredito = parseInt(montoCredito)
-    plazoCuotas = parseInt(plazoCuotas)
-    const cuota =(montoCredito * 0.3 + montoCredito) /plazoCuotas
-  return cuota.toFixed(2); // Redondear a 2 decimales para evitar valores largos
+    montoCredito = parseInt(montoCredito);
+    plazoCuotas = parseInt(plazoCuotas);
+    const cuota = (montoCredito * 0.3 + montoCredito) / plazoCuotas;
+    return cuota.toFixed(2);
   };
 
   const handleChange = (e) => {
@@ -54,7 +53,6 @@ const Creditos = () => {
       return;
     }
 
-    // Crear un nuevo crédito
     const randomNumber = Math.floor(Math.random() * 100) + 1;
     const numeroRand = Math.floor(Math.random() * 10000) + 1;
     const estado = randomNumber < 50 ? 'Denegado' : 'Aprobado';
@@ -66,7 +64,7 @@ const Creditos = () => {
       numeroRandom: randomNumber,
       estadoCredito: estado,
       numeroCredito: numeroRand,
-      montoCuotas: GenerarCuota(formData.montoCredito, formData.plazoCuotas)
+      montoCuotas: GenerarCuota(formData.montoCredito, formData.plazoCuotas),
     };
 
     const newCredito = [...Credito, updatedFormData];
@@ -99,7 +97,7 @@ const Creditos = () => {
       setNombreCompleto(nombreCom);
       setFormData((prevData) => ({
         ...prevData,
-        nomCompleto: nombreCompleto,
+        nomCompleto: nombreCom,  // actualizar nombre completo en formData
         id: identificacion,
       }));
     } else {
@@ -122,22 +120,14 @@ const Creditos = () => {
     document.getElementById('consultar-credito').reset();
   };
 
-  
-
- //const handlePagar = (numeroCredito) => {
-   // navigate(`/pagos/${numeroCredito}`);
-  //};
-
   const handlePagar = (numeroCredito, id) => {
-    const usuario =  JSON.parse(localStorage.getItem('credito')) || [] 
+    const usuario = JSON.parse(localStorage.getItem('credito')) || [];
     const uss = usuario.find((user) => user.numeroCredito === numeroCredito);
-    console.log(uss)
     const nombre = `${uss.nomCompleto}`;
-    const monto = `${uss.montoCredito}`
-    const montoCuota = `${uss.montoCuotas}`
-    const cantidadCuotas = `${uss.plazoCuotas}`
-    setNombre(nombre)
-    console.log(nombre)
+    const monto = `${uss.montoCredito}`;
+    const montoCuota = `${uss.montoCuotas}`;
+    const cantidadCuotas = `${uss.plazoCuotas}`;
+    setNombre(nombre);
     navigate(`/pagos/${numeroCredito}`, {
       state: {
         numeroCredito: numeroCredito,
@@ -145,10 +135,9 @@ const Creditos = () => {
         identificacion: id,
         monto: monto,
         totalCuotas: montoCuota,
-        plazo: cantidadCuotas
-      }
+        plazo: cantidadCuotas,
+      },
     });
-    //console.log(nombreCompleto)
   };
 
   const handleEditar = (numeroCredito) => {
@@ -159,7 +148,6 @@ const Creditos = () => {
       setEditingCreditId(numeroCredito);
     }
   };
-
 
   return (
     <div className="formulario">
@@ -213,14 +201,13 @@ const Creditos = () => {
             />
           </div>
           <div className="input-group">
-
             <label htmlFor="cuota">Cuota:</label>
             <input
               type="text"
               id="cuota"
               name="cuota"
               value={GenerarCuota(formData.montoCredito, formData.plazoCuotas)}
-              
+              readOnly
             />
           </div>
           <div className="input-group">
@@ -304,3 +291,4 @@ const Creditos = () => {
 };
 
 export default Creditos;
+
