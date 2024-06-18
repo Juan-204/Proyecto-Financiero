@@ -121,11 +121,10 @@ const Creditos = () => {
 
   const handlePagar = (numeroCredito, id) => {
     const usuario =  JSON.parse(localStorage.getItem('credito')) || [] 
-    const uss = usuario.find((user) => user.id === id);
+    const uss = usuario.find((user) => user.numeroCredito === numeroCredito);
     console.log(uss)
     const nombre = `${uss.nomCompleto}`;
     const monto = `${uss.montoCredito}`
-
     const montoCuota = `${uss.montoCuotas}`
     const cantidadCuotas = `${uss.plazoCuotas}`
     setNombre(nombre)
