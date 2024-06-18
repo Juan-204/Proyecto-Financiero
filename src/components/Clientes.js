@@ -21,24 +21,36 @@ const Clientes = () => {
         direccion: '',
     });
 
-    const [usuarios, setUsuarios] = useState([]);
-    //const [showModal, setShowModal] = useState(false);
-    const [editMode, setEditMode] = useState(false);
-    const [editingUserId, setEditingUserId] = useState(null); // Nuevo estado para almacenar el ID del usuario en edición
-    const [showCreateModal, setShowCreateModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
+    const [usuarios, setUsuarios] = useState([]); // Estado para almacenar la lista de usuarios
+    const [editMode, setEditMode] = useState(false); // Estado para controlar el modo de edición
+    const [editingUserId, setEditingUserId] = useState(null); // Estado para almacenar el ID del usuario en edición
+    const [showCreateModal, setShowCreateModal] = useState(false); // Estado para mostrar el modal de creación
+    const [showEditModal, setShowEditModal] = useState(false); // Estado para mostrar el modal de edición
     const [showTable, setShowTable] = useState(false); // Estado para mostrar la tabla de clientes
 
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Hook de navegación de React Router DOM
 
+    // Función para manejar el cambio en los campos de entrada
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        // Validación para campos específicos que solo permiten letras
+        if (name === 'primerNombre' || name === 'segundoNombre' || name === 'primerApellido' || name === 'segundoApellido'
+            || name === 'pais' || name === 'departamento' || name === 'municipio') {
+            if (value === '' || /^[A-Za-z]+$/.test(value)) { // Validar que solo contenga letras
+                setFormData((prevData) => ({
+                    ...prevData,
+                    [name]: value.toUpperCase(), // Convertir a mayúsculas
+                }));
+            }
+        } else {
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }));
+        }
     };
 
+    // Función para validar que el formulario esté completo
     const isFormValid = () => {
         for (let key in formData) {
             if (formData[key] === '' && key !== 'segundoNombre' && key !== 'segundoApellido') {
@@ -48,6 +60,7 @@ const Clientes = () => {
         return true;
     };
 
+    // Función para manejar el envío del formulario
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!isFormValid()) {
@@ -56,22 +69,23 @@ const Clientes = () => {
         }
 
         if (editMode) {
-            handleSaveChanges();
+            handleSaveChanges(); // Guardar cambios si está en modo de edición
         } else {
             if (!isTipoDocUnique(formData.numeroDocu)) {
                 alert("Ya existe un cliente con el mismo documento.");
                 resetFormData(); // Resetear los datos del formulario
                 return;
-
             }
-            createNewCliente();
+            createNewCliente(); // Crear nuevo cliente si no está en modo de edición
         }
     };
 
+    // Función para verificar que el número de documento sea único
     const isTipoDocUnique = (numeroDocu) => {
         return !usuarios.some((usuario) => usuario.numeroDocu === numeroDocu);
     };
 
+    // Función para guardar los cambios realizados en la edición
     const handleSaveChanges = () => {
         if (!isFormValid()) {
             alert("Por favor, complete todos los campos requeridos.");
@@ -85,27 +99,29 @@ const Clientes = () => {
         localStorage.setItem('usuarios', JSON.stringify(updatedUsuarios));
 
         setShowEditModal(true); // Mostrar modal de éxito
-        setEditMode(false);
-        setEditingUserId(null);
-        resetFormData();
+        setEditMode(false); // Salir del modo de edición
+        setEditingUserId(null); // Limpiar el ID de usuario en edición
+        resetFormData(); // Resetear los datos del formulario
     };
 
+    // Función para crear un nuevo cliente
     const createNewCliente = () => {
         const newUsuarios = [...usuarios, formData];
         setUsuarios(newUsuarios);
         localStorage.setItem('usuarios', JSON.stringify(newUsuarios));
 
-        setShowCreateModal(true);
+        setShowCreateModal(true); // Mostrar modal de éxito
         setShowTable(true); // Mostrar la tabla después de crear un cliente
-        resetFormData();
+        resetFormData(); // Resetear los datos del formulario
     };
 
+    // Función para cancelar la edición o creación
     const handleCancel = () => {
-        resetFormData();
-        setEditMode(false); // Asegurarse de salir del modo de edición si se cancela
+        resetFormData(); // Resetear los datos del formulario
+        setEditMode(false); // Salir del modo de edición
     };
 
-
+    // Función para resetear los datos del formulario
     const resetFormData = () => {
         setFormData({
             primerNombre: '',
@@ -124,41 +140,48 @@ const Clientes = () => {
             direccion: '',
         });
     };
+
+    // Funciones para manejar eventos del modal de creación
     const handleCloseCreateModal = () => {
         setShowCreateModal(false);
     };
 
     const handleConfirmCreateModal = () => {
         setShowCreateModal(false);
-        navigate('/Creditos');
+        navigate('/Creditos'); // Navegar a la ruta '/Creditos' después de confirmar
     };
 
+    // Funciones para manejar eventos del modal de edición
     const handleCloseEditModal = () => {
         setShowEditModal(false);
     };
 
     const handleConfirmEditModal = () => {
         setShowEditModal(false);
-        navigate('/Creditos');
+        navigate('/Creditos'); // Navegar a la ruta '/Creditos' después de confirmar
     };
 
+    // Función para manejar la edición de un usuario
     const handleEditar = (userId) => {
         const usuario = usuarios.find((user) => user.numeroDocu === userId);
         if (usuario) {
-            setFormData(usuario);
-            setEditingUserId(userId);
-            setEditMode(true);
+            setFormData(usuario); // Llenar el formulario con los datos del usuario seleccionado
+            setEditingUserId(userId); // Establecer el ID del usuario en edición
+            setEditMode(true); // Activar el modo de edición
         }
-
     };
 
+    // Función para mostrar la tabla al generar un reporte
     const handleGenerateReport = () => {
         setShowTable(true); // Mostrar la tabla al generar el reporte
     };
 
+    // Función para ocultar la tabla después de revisar el reporte
     const handleReviewReport = () => {
         setShowTable(false); // Ocultar la tabla después de revisar el reporte
     };
+
+    // Función para eliminar un usuario
     const handleEliminar = (userId) => {
         if (window.confirm("¿Estás seguro de que deseas eliminar este cliente?")) {
             const updatedUsuarios = usuarios.filter((usuario) => usuario.numeroDocu !== userId);
@@ -167,6 +190,7 @@ const Clientes = () => {
         }
     };
 
+    // Efecto para cargar usuarios desde localStorage al cargar el componente
     useEffect(() => {
         const storedUsuarios = localStorage.getItem('usuarios');
         if (storedUsuarios) {
@@ -234,7 +258,8 @@ const Clientes = () => {
                     </select>
                 </div>
                 <div className="input-group">
-                    <label htmlFor="numeroDocu">Número de Documento:</label>
+                    <label htmlFor="numeroDocu">Número de Document
+                        o:</label>
                     <input
                         type="number"
                         id="numeroDocu"
@@ -337,6 +362,7 @@ const Clientes = () => {
                     {editMode && <button type="button" onClick={handleCancel}>Cancelar Edición</button>}
                 </div>
             </form>
+            {/* Modal para la confirmación de creación */}
             <Modal
                 show={showCreateModal}
                 handleClose={handleCloseCreateModal}
@@ -345,6 +371,7 @@ const Clientes = () => {
             >
                 <p>El usuario ha sido creado con éxito. Paso a seguir: la creación del crédito.</p>
             </Modal>
+            {/* Modal para la confirmación de edición */}
             <Modal
                 show={showEditModal}
                 handleClose={handleCloseEditModal}
@@ -353,7 +380,8 @@ const Clientes = () => {
             >
                 <p>El usuario ha sido editado con éxito. ¿Desea continuar con la creación del crédito?</p>
             </Modal>
-            {showTable && ( // Mostrar la tabla solo si showTable es true
+            {/* Mostrar la tabla de usuarios si showTable es true */}
+            {showTable && (
                 <div className='table'>
                     <h2>Usuarios Creados</h2>
                     <table>
@@ -406,6 +434,7 @@ const Clientes = () => {
                     </div>
                 </div>
             )}
+            {/* Mostrar botón para generar reporte si showTable es false */}
             {!showTable && (
                 <div className="input-group">
                     <button onClick={handleGenerateReport}>Generar Reporte</button>
