@@ -9,7 +9,6 @@ const Creditos = () => {
   const [Credito, setCredito] = useState([]);
   const [consultaId, setConsultaId] = useState('');
   const [creditosFiltrados, setCreditosFiltrados] = useState([]);
-  const [nombre, setNombre] = useState([]);
   const [formData, setFormData] = useState({
     nomCompleto: '',
     id: '',
@@ -17,6 +16,10 @@ const Creditos = () => {
     plazoCuotas: '',
     fechaSolicitud: '',
   });
+
+  const [editMode, setEditMode] = useState(false);
+  const [editingCreditId, setEditingCreditId] = useState(null);
+  
 
   const navigate = useNavigate(); // Hook para redirección
 
@@ -26,6 +29,11 @@ const Creditos = () => {
       setCredito(JSON.parse(storedCreditos));
     }
   }, []);
+
+  const GenerarCuota = (montoCredito, plazoCuotas) => {
+    const cuota =(montoCredito * 0,3+ montoCredito) /plazoCuotas;
+  return cuota.toFixed(2); // Redondear a 2 decimales para evitar valores largos
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -135,6 +143,16 @@ const Creditos = () => {
     //console.log(nombreCompleto)
   };
 
+  const handleEditar = (numeroCredito) => {
+    const credito = Credito.find((credito) => credito.numeroCredito === numeroCredito);
+    if (credito) {
+      setFormData(credito);
+      setEditMode(true);
+      setEditingCreditId(numeroCredito);
+    }
+  };
+
+
   return (
     <div className="formulario">
       <Accordion title="Crear Crédito">
@@ -187,7 +205,20 @@ const Creditos = () => {
             />
           </div>
           <div className="input-group">
-            <button type="submit">Crear Crédito</button>
+
+            <label htmlFor="cuota">Cuota:</label>
+            <input
+              type="text"
+              id="cuota"
+              name="cuota"
+              value={GenerarCuota(formData.montoCredito, formData.plazoCuotas)}
+              readOnly
+            />
+          </div>
+          <div className="input-group">
+            <button type="submit">
+              {editMode ? 'Guardar Cambios' : 'Crear Crédito'}
+            </button>
           </div>
           <div className="input-group">
             <button type="button" onClick={handleConsultar}>
