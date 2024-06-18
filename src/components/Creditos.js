@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom'; // Importar useNavigate para red
 const Creditos = () => {
   const [identificacion, setIdentificacion] = useState('');
   const [nombreCompleto, setNombreCompleto] = useState('');
-  const [nombre, setNombre] = useState('')
   const [Credito, setCredito] = useState([]);
   const [consultaId, setConsultaId] = useState('');
   const [creditosFiltrados, setCreditosFiltrados] = useState([]);
@@ -18,8 +17,6 @@ const Creditos = () => {
     fechaSolicitud: '',
   });
 
-  const [editMode, setEditMode] = useState(false);
-  const [editingCreditId, setEditingCreditId] = useState(null);
   
 
   const navigate = useNavigate(); // Hook para redirección
@@ -32,9 +29,7 @@ const Creditos = () => {
   }, []);
 
   const GenerarCuota = (montoCredito, plazoCuotas) => {
-    montoCredito = parseInt(montoCredito)
-    plazoCuotas = parseInt(plazoCuotas)
-    const cuota =(montoCredito * 0.3 + montoCredito) /plazoCuotas
+    const cuota =(montoCredito * 0,3+ montoCredito) /plazoCuotas;
   return cuota.toFixed(2); // Redondear a 2 decimales para evitar valores largos
   };
 
@@ -66,7 +61,6 @@ const Creditos = () => {
       numeroRandom: randomNumber,
       estadoCredito: estado,
       numeroCredito: numeroRand,
-      montoCuotas: GenerarCuota(formData.montoCredito, formData.plazoCuotas)
     };
 
     const newCredito = [...Credito, updatedFormData];
@@ -130,10 +124,11 @@ const Creditos = () => {
 
   const handlePagar = (numeroCredito, id) => {
     const usuario =  JSON.parse(localStorage.getItem('credito')) || [] 
-    const uss = usuario.find((user) => user.numeroCredito === numeroCredito);
+    const uss = usuario.find((user) => user.id === id);
     console.log(uss)
     const nombre = `${uss.nomCompleto}`;
     const monto = `${uss.montoCredito}`
+
     const montoCuota = `${uss.montoCuotas}`
     const cantidadCuotas = `${uss.plazoCuotas}`
     setNombre(nombre)
@@ -149,15 +144,6 @@ const Creditos = () => {
       }
     });
     //console.log(nombreCompleto)
-  };
-
-  const handleEditar = (numeroCredito) => {
-    const credito = Credito.find((credito) => credito.numeroCredito === numeroCredito);
-    if (credito) {
-      setFormData(credito);
-      setEditMode(true);
-      setEditingCreditId(numeroCredito);
-    }
   };
 
 
@@ -220,13 +206,10 @@ const Creditos = () => {
               id="cuota"
               name="cuota"
               value={GenerarCuota(formData.montoCredito, formData.plazoCuotas)}
-              
+              readOnly
             />
           </div>
           <div className="input-group">
-            <button type="submit">
-              {editMode ? 'Guardar Cambios' : 'Crear Crédito'}
-            </button>
           </div>
           <div className="input-group">
             <button type="button" onClick={handleConsultar}>
@@ -266,7 +249,6 @@ const Creditos = () => {
                   <th>Nombre Completo</th>
                   <th>Identificación</th>
                   <th>Monto Del Crédito</th>
-                  <th>Valor De Cuota A Pagar</th>
                   <th>Plazo De Las Cuotas</th>
                   <th>Fecha de Solicitud</th>
                   <th>Puntaje</th>
@@ -281,7 +263,6 @@ const Creditos = () => {
                     <td>{creditos.nomCompleto}</td>
                     <td>{creditos.id}</td>
                     <td>{creditos.montoCredito}</td>
-                    <td>{creditos.montoCuotas}</td>
                     <td>{creditos.plazoCuotas}</td>
                     <td>{creditos.fechaSolicitud}</td>
                     <td>{creditos.numeroRandom}</td>
@@ -290,7 +271,7 @@ const Creditos = () => {
                       {creditos.estadoCredito === 'Aprobado' && (
                         <button onClick={() => handlePagar(creditos.numeroCredito, creditos.id)}>Pagar</button>
                       )}
-                      <button onClick={() => handleEditar(creditos.numeroCredito, creditos.id)}>Editar</button>
+                      
                     </td>
                   </tr>
                 ))}
