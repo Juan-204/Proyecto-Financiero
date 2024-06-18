@@ -9,7 +9,6 @@ const Creditos = () => {
   const [Credito, setCredito] = useState([]);
   const [consultaId, setConsultaId] = useState('');
   const [creditosFiltrados, setCreditosFiltrados] = useState([]);
-  const [nombre, setNombre] = useState([]);
   const [formData, setFormData] = useState({
     nomCompleto: '',
     id: '',
@@ -19,7 +18,7 @@ const Creditos = () => {
   });
   const [editMode, setEditMode] = useState(false);
   const [editingCreditId, setEditingCreditId] = useState(null);
-
+  
   const navigate = useNavigate(); // Hook para redirección
 
   useEffect(() => {
@@ -28,7 +27,10 @@ const Creditos = () => {
       setCredito(JSON.parse(storedCreditos));
     }
   }, []);
-  
+  const GenerarCuota = (montoCredito, plazoCuotas) => {
+    const cuota =(montoCredito * 0,3+ montoCredito) /plazoCuotas;
+  return cuota.toFixed(2); // Redondear a 2 decimales para evitar valores largos
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -158,7 +160,6 @@ const Creditos = () => {
       setEditingCreditId(numeroCredito);
     }
   };
-
   return (
     <div className='formulario'>
       <Accordion title="Crear Credito">
@@ -213,6 +214,16 @@ const Creditos = () => {
               name="fechaSolicitud"
               value={formData.fechaSolicitud}
               onChange={handleChange}
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="cuota">Cuota:</label>
+            <input
+              type="text"
+              id="cuota"
+              name="cuota"
+              value={GenerarCuota(formData.montoCredito, formData.plazoCuotas)}
+              readOnly
             />
           </div>
           <div className="input-group">
