@@ -135,6 +135,7 @@ const Creditos = () => {
     const nombre = `${uss.nomCompleto}`;
     const monto = `${uss.montoCredito}`
     const montoCuota = `${uss.montoCuotas}`
+    const cantidadCuotas = `${uss.plazoCuotas}`
     setNombre(nombre)
     console.log(nombre)
     navigate(`/pagos/${numeroCredito}`, {
@@ -143,7 +144,8 @@ const Creditos = () => {
         nomCompleto: nombre,
         identificacion: id,
         monto: monto,
-        totalCuotas: montoCuota
+        totalCuotas: montoCuota,
+        plazo: cantidadCuotas
       }
     });
     //console.log(nombreCompleto)
