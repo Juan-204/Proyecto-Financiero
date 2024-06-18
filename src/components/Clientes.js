@@ -22,9 +22,13 @@ const Clientes = () => {
     });
 
     const [usuarios, setUsuarios] = useState([]);
-    const [showModal, setShowModal] = useState(false);
+    //const [showModal, setShowModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editingUserId, setEditingUserId] = useState(null); // Nuevo estado para almacenar el ID del usuario en edición
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    
+   
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -50,43 +54,42 @@ const Clientes = () => {
             alert("Por favor, complete todos los campos requeridos.");
             return;
         }
-
-        const newUsuarios = [...usuarios, formData];
-        setUsuarios(newUsuarios);
-        localStorage.setItem('usuarios', JSON.stringify(newUsuarios));
-
-        setFormData({
-            primerNombre: '',
-            segundoNombre: '',
-            primerApellido: '',
-            segundoApellido: '',
-            tipoDoc: '',
-            numeroDocu: '',
-            fechaNac: '',
-            cel: '',
-            tel: '',
-            email: '',
-            pais: '',
-            departamento: '',
-            municipio: '',
-            direccion: '',
-        });
-        setShowModal(true);
-        setEditMode(false); // Resetear el modo de edición
+    
+        if (editMode) {
+            handleSaveChanges();
+        } else {
+            createNewCliente();
+        }
     };
 
-    const handleSaveChanges = (e) => {
-        e.preventDefault();
+    const handleSaveChanges = () => {
         if (!isFormValid()) {
             alert("Por favor, complete todos los campos requeridos.");
             return;
         }
-
+    
         const updatedUsuarios = usuarios.map((usuario) =>
             usuario.numeroDocu === editingUserId ? { ...formData, numeroDocu: editingUserId } : usuario
         );
         setUsuarios(updatedUsuarios);
         localStorage.setItem('usuarios', JSON.stringify(updatedUsuarios));
+    
+        setShowEditModal(true); // Mostrar modal de éxito
+        setEditMode(false);
+        setEditingUserId(null);
+        resetFormData();
+    };
+    
+    const createNewCliente = () => {
+        const newUsuarios = [...usuarios, formData];
+        setUsuarios(newUsuarios);
+        localStorage.setItem('usuarios', JSON.stringify(newUsuarios));
+    
+        setShowCreateModal(true);
+        resetFormData();
+    };
+    
+    const resetFormData = () => {
         setFormData({
             primerNombre: '',
             segundoNombre: '',
@@ -103,30 +106,34 @@ const Clientes = () => {
             municipio: '',
             direccion: '',
         });
-        setShowModal(true);
-        setEditMode(false);
-        setEditingUserId(null);
+    };
+    const handleCloseCreateModal = () => {
+        setShowCreateModal(false);
     };
 
-    const handleCloseModal = () => {
-        setShowModal(false);
+    const handleConfirmCreateModal = () => {
+        setShowCreateModal(false);
+        navigate('/Creditos');
     };
 
-    const handleConfirmModal = () => {
-        setShowModal(false);
-        if (!editMode) {
-            navigate('/Creditos'); // Redirigir a la página de créditos solo si no estamos en modo edición
-        }
+    const handleCloseEditModal = () => {
+        setShowEditModal(false);
+    };
+
+    const handleConfirmEditModal = () => {
+        setShowEditModal(false);
+        navigate('/Creditos');
     };
 
     const handleEditar = (userId) => {
         const usuario = usuarios.find((user) => user.numeroDocu === userId);
         if (usuario) {
-            setFormData(usuario); // Cargar datos del usuario en el formulario de edición
-            setEditingUserId(userId); // Almacenar el ID del usuario en edición
-            setEditMode(true); // Activar el modo de edición
+            setFormData(usuario);
+            setEditingUserId(userId);
+            setEditMode(true);
         }
     };
+
 
     useEffect(() => {
         const storedUsuarios = localStorage.getItem('usuarios');
@@ -138,7 +145,7 @@ const Clientes = () => {
     return (
         <div className='formulario'>
             <h2>Formulario de Creación de Usuario</h2>
-            <form onSubmit={editMode ? handleSaveChanges : handleSubmit}>
+            <form onSubmit={handleSubmit}>
                 <div className="input-group">
                     <label htmlFor='primerNombre'>Primer Nombre:</label>
                     <input 
@@ -298,13 +305,21 @@ const Clientes = () => {
                     {editMode && <button type="button" onClick={() => setEditMode(false)}>Cancelar Edición</button>}
                 </div>
             </form>
-            <Modal 
-                show={showModal}
-                handleClose={handleCloseModal}
-                handleConfirm={handleConfirmModal}
-                title={editMode ? 'Cliente Editado' : 'Cliente Creado'}
+            <Modal
+                show={showCreateModal}
+                handleClose={handleCloseCreateModal}
+                handleConfirm={handleConfirmCreateModal}
+                title='Cliente Creado'
             >
-                <p>El usuario ha sido {editMode ? 'editado' : 'creado'} con éxito. {editMode ? '' : 'Paso a seguir: la creación del crédito.'}</p>
+                <p>El usuario ha sido creado con éxito. Paso a seguir: la creación del crédito.</p>
+            </Modal>
+            <Modal
+                show={showEditModal}
+                handleClose={handleCloseEditModal}
+                handleConfirm={handleConfirmEditModal}
+                title='Cliente Editado'
+            >
+                <p>El usuario ha sido editado con éxito. ¿Desea continuar con la creación del crédito?</p>
             </Modal>
             <div className='table'>
                 <h2>Usuarios Creados</h2>

@@ -17,8 +17,6 @@ const Creditos = () => {
     fechaSolicitud: '',
   });
 
-  const [editMode, setEditMode] = useState(false);
-  const [editingCreditId, setEditingCreditId] = useState(null);
   
 
   const navigate = useNavigate(); // Hook para redirección
@@ -130,8 +128,6 @@ const Creditos = () => {
     console.log(uss)
     const nombre = `${uss.nomCompleto}`;
     const monto = `${uss.montoCredito}`
-    setNombre(nombre)
-    console.log(nombre)
     navigate(`/pagos/${numeroCredito}`, {
       state: {
         numeroCredito: numeroCredito,
@@ -141,15 +137,6 @@ const Creditos = () => {
       }
     });
     //console.log(nombreCompleto)
-  };
-
-  const handleEditar = (numeroCredito) => {
-    const credito = Credito.find((credito) => credito.numeroCredito === numeroCredito);
-    if (credito) {
-      setFormData(credito);
-      setEditMode(true);
-      setEditingCreditId(numeroCredito);
-    }
   };
 
 
@@ -216,9 +203,6 @@ const Creditos = () => {
             />
           </div>
           <div className="input-group">
-            <button type="submit">
-              {editMode ? 'Guardar Cambios' : 'Crear Crédito'}
-            </button>
           </div>
           <div className="input-group">
             <button type="button" onClick={handleConsultar}>
@@ -280,7 +264,7 @@ const Creditos = () => {
                       {creditos.estadoCredito === 'Aprobado' && (
                         <button onClick={() => handlePagar(creditos.numeroCredito, creditos.id)}>Pagar</button>
                       )}
-                      <button onClick={() => handleEditar(creditos.numeroCredito, creditos.id)}>Editar</button>
+                      
                     </td>
                   </tr>
                 ))}

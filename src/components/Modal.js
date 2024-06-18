@@ -17,7 +17,7 @@ const Modal = ({ show, handleClose, handleConfirm, title, children }) => {
                 </div>
                 <div className="modal-footer">
                     <button onClick={handleClose}>Cancelar</button>
-                    <button onClick={handleConfirm}>Ok</button>
+                    <button onClick={handleConfirm}>OK</button>
                 </div>
             </div>
         </div>
