@@ -14,6 +14,7 @@ const PaymentForm = () => {
   const [numCredito, setNumCredito] = useState(numeroCredito || '');
   const [numCuotas, setNumCuotas] = useState(plazo || 0);
   const [totalCredito, setTotalCredito] = useState(monto || 0);
+  const [abono, setAbono] = useState('');
 
   const handlePaymentTypeChange = (event) => {
     const value = event.target.value;
@@ -62,12 +63,20 @@ const PaymentForm = () => {
     const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
 
     let newTotalCredito = totalCredito
+    let newValorAbono = abono
     let newNumCuotas = numCuotas;
     if (paymentType === 'cuota') {
       newNumCuotas = numCuotas - 1;
-      newTotalCredito = totalCredito - totalCuotas
+      newTotalCredito = (totalCredito - totalCuotas).toFixed(2);
       setNumCuotas(newNumCuotas);
       setTotalCredito(newTotalCredito)
+    }else if(paymentType === 'abono') {
+      if(abono >= totalCuotas){
+        newNumCuotas = numCuotas - 1;
+        setNumCuotas(newNumCuotas);
+      }
+      newValorAbono = (totalCredito - abono).toFixed(2);
+      setAbono(newValorAbono)
     }
 
     const newFormData = {
@@ -77,7 +86,8 @@ const PaymentForm = () => {
       fecha: document.getElementById('fecha').value,
       paymentType: paymentType,
       numcuotas: newNumCuotas,
-      toCredito: newTotalCredito
+      toCredito: newTotalCredito,
+      toAbono: newValorAbono
     };
 
     if (paymentType === 'abono') {
