@@ -18,8 +18,6 @@ const Creditos = () => {
     fechaSolicitud: '',
   });
 
-  const [editMode, setEditMode] = useState(false);
-  const [editingCreditId, setEditingCreditId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -145,14 +143,6 @@ const Creditos = () => {
   };
 
 
-  const handleEditar = (numeroCredito) => {
-    const credito = Credito.find((credito) => credito.numeroCredito === numeroCredito);
-    if (credito) {
-      setFormData(credito);
-      setEditMode(true);
-      setEditingCreditId(numeroCredito);
-    }
-  };
 
   return (
     <div className="formulario">
