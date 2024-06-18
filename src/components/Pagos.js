@@ -5,13 +5,14 @@ import './Clientes.css';
 const PaymentForm = () => {
   const location = useLocation();
   console.log('Location state:', location.state);
-  const { numeroCredito, nomCompleto, identificacion, monto, totalCuotas } = location.state || {};
+  const { numeroCredito, nomCompleto, identificacion, monto, totalCuotas, plazo } = location.state || {};
 
   const [formData, setFormData] = useState([]);
   const [showTable, setShowTable] = useState(false);
   const [documento, setDocumento] = useState(identificacion || '');
   const [nombre, setNombre] = useState(nomCompleto || '');
   const [numCredito, setNumCredito] = useState(numeroCredito || '');
+  const [numCuotas, setNumCuotas] = useState(plazo || 0); // Estado para el número de cuotas
 
   const handlePaymentTypeChange = (event) => {
     const value = event.target.value;
@@ -49,77 +50,55 @@ const PaymentForm = () => {
   }, []);
 
   useEffect(() => {
-    // Cargar datos del localStorage al montar el componente
     const storedFormData = JSON.parse(localStorage.getItem('formData')) || [];
     setFormData(storedFormData);
-
-    // Restablecer el formulario al montar el componente
-    document.getElementById('formulario').reset(); // Limpiar el formulario
-    handlePaymentTypeChange({ target: { value: 'cuota' } }); // Restablecer las secciones a su estado inicial
+    document.getElementById('formulario').reset(); 
+    handlePaymentTypeChange({ target: { value: 'cuota' } });
   }, []);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+
+    let newNumCuotas = numCuotas;
+    if (paymentType === 'cuota') {
+      newNumCuotas = numCuotas - 1;
+      setNumCuotas(newNumCuotas);
+    }
+
     const newFormData = {
       documento: documento,
       nombre: nombre,
       credito: document.getElementById('credito').value,
       fecha: document.getElementById('fecha').value,
-      paymentType: document.querySelector('input[name="paymentType"]:checked').value,
+      paymentType: paymentType,
+      numcuotas: newNumCuotas,
     };
-    if (newFormData.paymentType === 'abono') {
+
+    if (paymentType === 'abono') {
       newFormData.abonoAmount = document.getElementById('abonoAmount').value;
     }
 
     const updatedFormData = [...formData, newFormData];
     localStorage.setItem('formData', JSON.stringify(updatedFormData));
     alert('Pago exitoso');
-
-    // Limpiar el formulario
     document.getElementById('formulario').reset();
     handlePaymentTypeChange({ target: { value: 'cuota' } });
-
-    // Actualizar el estado con los nuevos datos del formulario
     setFormData(updatedFormData);
-    setShowTable(true); // Mostrar la tabla de detalles del pago
+    setShowTable(true);
   };
-/*
-  const handleDocumentoChange = (event) => {
-    const newDocumento = event.target.value;
-    setDocumento(newDocumento);
 
-    // Buscar en el localStorage por la identificación proporcionada
-    const storedUsuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-    const storedCredito = JSON.parse(localStorage.getItem('credito')) || [];
-    const usuario = storedUsuarios.find((user) => user.numeroDocu === newDocumento);
-    const credito = storedCredito.find((cred) => cred.id === newDocumento);
-
-    if (usuario) {
-      const nombreCompleto = `${usuario.primerNombre} ${usuario.segundoNombre} ${usuario.primerApellido} ${usuario.segundoApellido}`;
-      setNombre(nombreCompleto);
-    } else {
-      setNombre('Usuario no encontrado');
-    }
-
-    if (credito) {
-      const numberCredit = `${credito.numeroCredito}`;
-      setNumCredito(numberCredit);
-    } else {
-      setNumCredito('0');
-    }
-  };
-*/
   return (
     <div className='formulario'>
       <h2>Formulario de Pagos</h2>
       <form id="formulario" action="#" method="post" onSubmit={handleFormSubmit}>
         <div className="input-group">
           <label htmlFor="documento">Número de Documento:</label>
-          <input type="text" id="documento" value={identificacion} /*onChange={handleDocumentoChange}*/ required />
+          <input type="text" id="documento" value={identificacion} readOnly required />
         </div>
         <div className="input-group">
           <label htmlFor="nombre">Nombre Completo:</label>
-          <input type="text" id="nombre" value={nomCompleto} readOnly  />
+          <input type="text" id="nombre" value={nomCompleto} readOnly />
         </div>
         <div className="input-group">
           <label htmlFor="credito">Número de Crédito:</label>
@@ -131,7 +110,7 @@ const PaymentForm = () => {
             <input type="radio" name="paymentType" value="cuota" defaultChecked /> Cuota
           </label>
           <div id="amountDueSection">
-            <label htmlFor="amountDue">Monto a pagar: </label>
+            <label htmlFor="amountDue">Monto a pagar:</label>
             <input type="text" id="amountDue" name="amountDue" value={totalCuotas} readOnly />
           </div>
           <label>
@@ -171,6 +150,7 @@ const PaymentForm = () => {
                   <th>Número de Crédito</th>
                   <th>Tipo de Pago</th>
                   <th>Monto a Pagar / Abonar</th>
+                  <th>Numero De Cuotas</th>
                   <th>Fecha de Pago</th>
                 </tr>
               </thead>
@@ -181,7 +161,8 @@ const PaymentForm = () => {
                     <td>{data.nombre}</td>
                     <td>{data.credito}</td>
                     <td>{data.paymentType}</td>
-                    <td>{data.paymentType === 'cuota' ? 5000 : data.paymentType === 'total' ? 20000 : data.abonoAmount}</td>
+                    <td>{data.paymentType === 'cuota' ? totalCuotas : data.paymentType === 'total' ? monto : data.abonoAmount}</td>
+                    <td>{data.numcuotas}</td>
                     <td>{data.fecha}</td>
                   </tr>
                 ))}
