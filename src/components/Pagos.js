@@ -63,17 +63,21 @@ const PaymentForm = () => {
     
     let newTotalCredito = parseFloat(totalCredito);
     let newNumCuotas = numCuotas;
-    
-    if (paymentType === 'cuota') {
-      newNumCuotas = numCuotas - 1;
-      newTotalCredito = (newTotalCredito - parseFloat(totalCuotas)).toFixed(2);
-    } else if (paymentType === 'total') {
-      newTotalCredito = 0;
-      newNumCuotas = 0;
-    } else if (paymentType === 'abono') {
-      const abonoAmount = parseFloat(document.getElementById('abonoAmount').value);
-      newTotalCredito = (newTotalCredito - abonoAmount).toFixed(2);
-    }
+
+if (paymentType === 'cuota') {
+  newNumCuotas = numCuotas - 1;
+  newTotalCredito = (newTotalCredito - parseFloat(totalCuotas)).toFixed(2);
+} else if (paymentType === 'total') {
+  newTotalCredito = 0;
+  newNumCuotas = 0;
+} else if (paymentType === 'abono') { 
+  const abonoAmount = parseFloat(document.getElementById('abonoAmount').value);
+  const cuotaAmount = parseFloat(totalCuotas) / numCuotas;
+  if (cuotaAmount <= abonoAmount) {
+    newNumCuotas = numCuotas - 1;
+  }
+  newTotalCredito = (newTotalCredito - abonoAmount).toFixed(2);
+}
 
     const newFormData = {
       documento: documento,
