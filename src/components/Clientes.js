@@ -29,9 +29,6 @@ const Clientes = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showTable, setShowTable] = useState(false); // Estado para mostrar la tabla de clientes
 
-
-    
-   
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -57,7 +54,7 @@ const Clientes = () => {
             alert("Por favor, complete todos los campos requeridos.");
             return;
         }
-    
+
         if (editMode) {
             handleSaveChanges();
         } else {
@@ -65,12 +62,12 @@ const Clientes = () => {
                 alert("Ya existe un cliente con el mismo documento.");
                 resetFormData(); // Resetear los datos del formulario
                 return;
-                
+
             }
             createNewCliente();
         }
     };
-    
+
     const isTipoDocUnique = (numeroDocu) => {
         return !usuarios.some((usuario) => usuario.numeroDocu === numeroDocu);
     };
@@ -80,26 +77,26 @@ const Clientes = () => {
             alert("Por favor, complete todos los campos requeridos.");
             return;
         }
-    
+
         const updatedUsuarios = usuarios.map((usuario) =>
             usuario.numeroDocu === editingUserId ? { ...formData, numeroDocu: editingUserId } : usuario
         );
         setUsuarios(updatedUsuarios);
         localStorage.setItem('usuarios', JSON.stringify(updatedUsuarios));
-    
+
         setShowEditModal(true); // Mostrar modal de éxito
         setEditMode(false);
         setEditingUserId(null);
         resetFormData();
     };
-    
+
     const createNewCliente = () => {
         const newUsuarios = [...usuarios, formData];
         setUsuarios(newUsuarios);
         localStorage.setItem('usuarios', JSON.stringify(newUsuarios));
-    
+
         setShowCreateModal(true);
-        setShowTable(true); // Mostrar la tabla después de crear un clien
+        setShowTable(true); // Mostrar la tabla después de crear un cliente
         resetFormData();
     };
 
@@ -108,7 +105,7 @@ const Clientes = () => {
         setEditMode(false); // Asegurarse de salir del modo de edición si se cancela
     };
 
-    
+
     const resetFormData = () => {
         setFormData({
             primerNombre: '',
@@ -152,12 +149,23 @@ const Clientes = () => {
             setEditingUserId(userId);
             setEditMode(true);
         }
-        
+
     };
 
-    
+    const handleGenerateReport = () => {
+        setShowTable(true); // Mostrar la tabla al generar el reporte
+    };
 
-
+    const handleReviewReport = () => {
+        setShowTable(false); // Ocultar la tabla después de revisar el reporte
+    };
+    const handleEliminar = (userId) => {
+        if (window.confirm("¿Estás seguro de que deseas eliminar este cliente?")) {
+            const updatedUsuarios = usuarios.filter((usuario) => usuario.numeroDocu !== userId);
+            setUsuarios(updatedUsuarios);
+            localStorage.setItem('usuarios', JSON.stringify(updatedUsuarios));
+        }
+    };
 
     useEffect(() => {
         const storedUsuarios = localStorage.getItem('usuarios');
@@ -172,20 +180,20 @@ const Clientes = () => {
             <form onSubmit={handleSubmit}>
                 <div className="input-group">
                     <label htmlFor='primerNombre'>Primer Nombre:</label>
-                    <input 
+                    <input
                         type="text"
                         id='primerNombre'
                         name="primerNombre"
                         value={formData.primerNombre}
-                        onChange={handleChange} 
+                        onChange={handleChange}
                         required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="segundoNombre">Segundo Nombre:</label>
-                    <input 
-                        type="text" 
-                        id="segundoNombre" 
+                    <input
+                        type="text"
+                        id="segundoNombre"
                         name="segundoNombre"
                         value={formData.segundoNombre}
                         onChange={handleChange}
@@ -193,20 +201,20 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <label htmlFor="primerApellido">Primer Apellido:</label>
-                    <input 
-                        type="text" 
+                    <input
+                        type="text"
                         id='primerApellido'
                         name='primerApellido'
                         value={formData.primerApellido}
-                        onChange={handleChange} 
+                        onChange={handleChange}
                         required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="segundoApellido">Segundo Apellido:</label>
-                    <input 
-                        type="text" 
-                        id="segundoApellido" 
+                    <input
+                        type="text"
+                        id="segundoApellido"
                         name="segundoApellido"
                         value={formData.segundoApellido}
                         onChange={handleChange}
@@ -214,10 +222,10 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <label htmlFor="tipoDoc">Tipo De Documento</label>
-                    <select 
+                    <select
                         name="tipoDoc"
                         value={formData.tipoDoc}
-                        onChange={handleChange} 
+                        onChange={handleChange}
                         required
                     >
                         <option value="">Seleccione un tipo de documento</option>
@@ -227,10 +235,10 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <label htmlFor="numeroDocu">Número de Documento:</label>
-                    <input 
-                        type="number" 
-                        id="numeroDocu" 
-                        name="numeroDocu" 
+                    <input
+                        type="number"
+                        id="numeroDocu"
+                        name="numeroDocu"
                         value={formData.numeroDocu}
                         onChange={handleChange}
                         required
@@ -238,10 +246,10 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <label htmlFor="fechaNac">Fecha de Nacimiento:</label>
-                    <input 
-                        type="date" 
-                        id="fechaNac" 
-                        name="fechaNac" 
+                    <input
+                        type="date"
+                        id="fechaNac"
+                        name="fechaNac"
                         value={formData.fechaNac}
                         onChange={handleChange}
                         required
@@ -249,10 +257,10 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <label htmlFor="cel">Número de Celular:</label>
-                    <input 
-                        type="number" 
-                        id="cel" 
-                        name="cel" 
+                    <input
+                        type="number"
+                        id="cel"
+                        name="cel"
                         value={formData.cel}
                         onChange={handleChange}
                         required
@@ -260,10 +268,10 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <label htmlFor="tel">Número de Teléfono:</label>
-                    <input 
+                    <input
                         type="number"
-                        id="tel" 
-                        name="tel" 
+                        id="tel"
+                        name="tel"
                         value={formData.tel}
                         onChange={handleChange}
                         required
@@ -271,10 +279,10 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <label htmlFor="email">Correo Electrónico:</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
                         value={formData.email}
                         onChange={handleChange}
                         required
@@ -282,10 +290,10 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <label htmlFor="pais">Pais:</label>
-                    <input 
-                        type="text" 
-                        id="pais" 
-                        name="pais" 
+                    <input
+                        type="text"
+                        id="pais"
+                        name="pais"
                         value={formData.pais}
                         onChange={handleChange}
                         required
@@ -293,10 +301,10 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <label htmlFor="departamento">Departamento:</label>
-                    <input 
-                        type="text" 
-                        id="departamento" 
-                        name="departamento" 
+                    <input
+                        type="text"
+                        id="departamento"
+                        name="departamento"
                         value={formData.departamento}
                         onChange={handleChange}
                         required
@@ -304,20 +312,20 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <label htmlFor="municipio">Municipio:</label>
-                    <input 
-                        type="text" 
-                        id="municipio" 
+                    <input
+                        type="text"
+                        id="municipio"
                         name="municipio"
                         value={formData.municipio}
-                        onChange={handleChange} 
+                        onChange={handleChange}
                         required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="direccion">Dirección:</label>
-                    <input 
-                        type="text" 
-                        id="direccion" 
+                    <input
+                        type="text"
+                        id="direccion"
                         name="direccion"
                         value={formData.direccion}
                         onChange={handleChange}
@@ -346,61 +354,65 @@ const Clientes = () => {
                 <p>El usuario ha sido editado con éxito. ¿Desea continuar con la creación del crédito?</p>
             </Modal>
             {showTable && ( // Mostrar la tabla solo si showTable es true
-            <div className='table'>
-                <h2>Usuarios Creados</h2>
-              
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Primer Nombre</th>
-                            <th>Segundo Nombre</th>
-                            <th>Primer Apellido</th>
-                            <th>Segundo Apellido</th>
-                            <th>Tipo de Documento</th>
-                            <th>Numero de Documento</th>
-                            <th>Fecha de Nacimiento</th>
-                            <th>Numero de Celular</th>
-                            <th>Numero de Teléfono</th>
-                            <th>Correo Electrónico</th>
-                            <th>Pais</th>
-                            <th>Departamento</th>
-                            <th>Municipio</th>
-                            <th>Dirección</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                {usuarios.map((usuario, index) => (
-                <tr key={index}>
-                <td>{usuario.primerNombre}</td>
-                <td>{usuario.segundoNombre}</td>
-                <td>{usuario.primerApellido}</td>
-                <td>{usuario.segundoApellido}</td>
-                <td>{usuario.tipoDoc}</td>
-                <td>{usuario.numeroDocu}</td>
-                <td>{usuario.fechaNac}</td>
-                <td>{usuario.cel}</td>
-                <td>{usuario.tel}</td>
-                <td>{usuario.email}</td>
-                <td>{usuario.pais}</td>
-                <td>{usuario.departamento}</td>
-                <td>{usuario.municipio}</td>
-                <td>{usuario.direccion}</td>
-                <td>
-                <button onClick={() => handleEditar(usuario.numeroDocu)}>Editar</button>
-</td>
-                </tr>
-                ))}
-                </tbody>
-                </table>
-         
+                <div className='table'>
+                    <h2>Usuarios Creados</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Primer Nombre</th>
+                                <th>Segundo Nombre</th>
+                                <th>Primer Apellido</th>
+                                <th>Segundo Apellido</th>
+                                <th>Tipo de Documento</th>
+                                <th>Numero de Documento</th>
+                                <th>Fecha de Nacimiento</th>
+                                <th>Numero de Celular</th>
+                                <th>Numero de Teléfono</th>
+                                <th>Correo Electrónico</th>
+                                <th>Pais</th>
+                                <th>Departamento</th>
+                                <th>Municipio</th>
+                                <th>Dirección</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {usuarios.map((usuario, index) => (
+                                <tr key={index}>
+                                    <td>{usuario.primerNombre}</td>
+                                    <td>{usuario.segundoNombre}</td>
+                                    <td>{usuario.primerApellido}</td>
+                                    <td>{usuario.segundoApellido}</td>
+                                    <td>{usuario.tipoDoc}</td>
+                                    <td>{usuario.numeroDocu}</td>
+                                    <td>{usuario.fechaNac}</td>
+                                    <td>{usuario.cel}</td>
+                                    <td>{usuario.tel}</td>
+                                    <td>{usuario.email}</td>
+                                    <td>{usuario.pais}</td>
+                                    <td>{usuario.departamento}</td>
+                                    <td>{usuario.municipio}</td>
+                                    <td>{usuario.direccion}</td>
+                                    <td>
+                                        <button onClick={() => handleEditar(usuario.numeroDocu)}>Editar</button>
+                                        <button onClick={() => handleEliminar(usuario.numeroDocu)}>Eliminar</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div className="input-group">
+                        <button onClick={handleReviewReport}>Reporte Revisado</button>
+                    </div>
                 </div>
-                )}
+            )}
+            {!showTable && (
+                <div className="input-group">
+                    <button onClick={handleGenerateReport}>Generar Reporte</button>
+                </div>
+            )}
         </div>
-
-    )
+    );
 }
-
-
 
 export default Clientes;

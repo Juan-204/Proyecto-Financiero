@@ -9,9 +9,9 @@ const PaymentForm = () => {
 
   const [formData, setFormData] = useState([]);
   const [showTable, setShowTable] = useState(false);
-  const [documento, setDocumento] = useState(identificacion || '');
-  const [nombre, setNombre] = useState(nomCompleto || '');
-  const [numCredito, setNumCredito] = useState(numeroCredito || '');
+  const [documento] = useState(identificacion || '');
+  const [nombre] = useState(nomCompleto || '');
+  const [numCredito] = useState(numeroCredito || '');
   const [numCuotas, setNumCuotas] = useState(plazo || 0);
   const [totalCredito, setTotalCredito] = useState(monto || 0);
 

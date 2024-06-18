@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const Creditos = () => {
   const [identificacion, setIdentificacion] = useState('');
   const [nombreCompleto, setNombreCompleto] = useState('');
-  const [nombre, setNombre] = useState('');
+  const [Nombre,setNombre] = useState('');
   const [Credito, setCredito] = useState([]);
   const [consultaId, setConsultaId] = useState('');
   const [creditosFiltrados, setCreditosFiltrados] = useState([]);
