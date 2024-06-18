@@ -60,24 +60,29 @@ const PaymentForm = () => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
-
-    let newTotalCredito = totalCredito
+    
+    let newTotalCredito = parseFloat(totalCredito);
     let newNumCuotas = numCuotas;
+    
     if (paymentType === 'cuota') {
       newNumCuotas = numCuotas - 1;
-      newTotalCredito = totalCredito - totalCuotas
-      setNumCuotas(newNumCuotas);
-      setTotalCredito(newTotalCredito)
+      newTotalCredito = (newTotalCredito - parseFloat(totalCuotas)).toFixed(2);
+    } else if (paymentType === 'total') {
+      newTotalCredito = 0;
+      newNumCuotas = 0;
+    } else if (paymentType === 'abono') {
+      const abonoAmount = parseFloat(document.getElementById('abonoAmount').value);
+      newTotalCredito = (newTotalCredito - abonoAmount).toFixed(2);
     }
 
     const newFormData = {
       documento: documento,
       nombre: nombre,
-      credito: document.getElementById('credito').value,
+      credito: numCredito,
       fecha: document.getElementById('fecha').value,
       paymentType: paymentType,
       numcuotas: newNumCuotas,
-      toCredito: newTotalCredito
+      toCredito: newTotalCredito,
     };
 
     if (paymentType === 'abono') {
@@ -90,6 +95,8 @@ const PaymentForm = () => {
     document.getElementById('formulario').reset();
     handlePaymentTypeChange({ target: { value: 'cuota' } });
     setFormData(updatedFormData);
+    setNumCuotas(newNumCuotas);
+    setTotalCredito(newTotalCredito);
     setShowTable(true);
   };
 
@@ -99,11 +106,11 @@ const PaymentForm = () => {
       <form id="formulario" action="#" method="post" onSubmit={handleFormSubmit}>
         <div className="input-group">
           <label htmlFor="documento">Número de Documento:</label>
-          <input type="text" id="documento" value={identificacion} readOnly required />
+          <input type="text" id="documento" value={documento} readOnly required />
         </div>
         <div className="input-group">
           <label htmlFor="nombre">Nombre Completo:</label>
-          <input type="text" id="nombre" value={nomCompleto} readOnly />
+          <input type="text" id="nombre" value={nombre} readOnly />
         </div>
         <div className="input-group">
           <label htmlFor="credito">Número de Crédito:</label>
@@ -123,7 +130,7 @@ const PaymentForm = () => {
           </label>
           <div id="totalPaymentSection" style={{ display: 'none' }}>
             <label htmlFor="totalPayment">Total del Crédito:</label>
-            <input type="text" id="totalPayment" name="totalPayment" value={monto} readOnly />
+            <input type="text" id="totalPayment" name="totalPayment" value={totalCredito} readOnly />
           </div>
           <label>
             <input type="radio" name="paymentType" value="abono" /> Abono
@@ -153,7 +160,7 @@ const PaymentForm = () => {
                   <th>Número de Documento</th>
                   <th>Nombre Completo</th>
                   <th>Número de Crédito</th>
-                  <th>Monto Credito</th>
+                  <th>Monto Crédito</th>
                   <th>Tipo de Pago</th>
                   <th>Monto a Pagar / Abonar</th>
                   <th>Numero De Cuotas</th>
@@ -168,7 +175,7 @@ const PaymentForm = () => {
                     <td>{data.credito}</td>
                     <td>{data.toCredito}</td>
                     <td>{data.paymentType}</td>
-                    <td>{data.paymentType === 'cuota' ? totalCuotas : data.paymentType === 'total' ? monto : data.abonoAmount}</td>
+                    <td>{data.paymentType === 'cuota' ? totalCuotas : data.paymentType === 'total' ? totalCredito : data.abonoAmount}</td>
                     <td>{data.numcuotas}</td>
                     <td>{data.fecha}</td>
                   </tr>
@@ -183,3 +190,4 @@ const PaymentForm = () => {
 };
 
 export default PaymentForm;
+
