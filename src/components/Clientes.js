@@ -61,8 +61,8 @@ const Clientes = () => {
         if (editMode) {
             handleSaveChanges();
         } else {
-            if (!isTipoDocUnique(formData.tipoDoc)) {
-                alert("Ya existe un cliente con el mismo tipo de documento.");
+            if (!isTipoDocUnique(formData.numeroDocu)) {
+                alert("Ya existe un cliente con el mismo documento.");
                 resetFormData(); // Resetear los datos del formulario
                 return;
                 
@@ -71,8 +71,8 @@ const Clientes = () => {
         }
     };
     
-    const isTipoDocUnique = (tipoDoc) => {
-        return !usuarios.some((usuario) => usuario.tipoDoc === tipoDoc);
+    const isTipoDocUnique = (numeroDocu) => {
+        return !usuarios.some((usuario) => usuario.numeroDocu === numeroDocu);
     };
 
     const handleSaveChanges = () => {
