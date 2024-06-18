@@ -65,6 +65,7 @@ const Creditos = () => {
       estadoCredito: estado,
       numeroCredito: numeroRand,
       montoCuotas: GenerarCuota(formData.montoCredito, formData.plazoCuotas),
+
     };
 
     const newCredito = [...Credito, updatedFormData];
@@ -121,13 +122,16 @@ const Creditos = () => {
   };
 
   const handlePagar = (numeroCredito, id) => {
-    const usuario = JSON.parse(localStorage.getItem('credito')) || [];
-    const uss = usuario.find((user) => user.numeroCredito === numeroCredito);
+    const usuario =  JSON.parse(localStorage.getItem('credito')) || [] 
+    const uss = usuario.find((user) => user.id === id);
+    console.log(uss)
     const nombre = `${uss.nomCompleto}`;
-    const monto = `${uss.montoCredito}`;
-    const montoCuota = `${uss.montoCuotas}`;
-    const cantidadCuotas = `${uss.plazoCuotas}`;
-    setNombre(nombre);
+    const monto = `${uss.montoCredito}`
+
+    const montoCuota = `${uss.montoCuotas}`
+    const cantidadCuotas = `${uss.plazoCuotas}`
+    setNombre(nombre)
+    console.log(nombre)
     navigate(`/pagos/${numeroCredito}`, {
       state: {
         numeroCredito: numeroCredito,
@@ -139,6 +143,7 @@ const Creditos = () => {
       },
     });
   };
+
 
   const handleEditar = (numeroCredito) => {
     const credito = Credito.find((credito) => credito.numeroCredito === numeroCredito);
@@ -211,9 +216,6 @@ const Creditos = () => {
             />
           </div>
           <div className="input-group">
-            <button type="submit">
-              {editMode ? 'Guardar Cambios' : 'Crear Crédito'}
-            </button>
           </div>
           <div className="input-group">
             <button type="button" onClick={handleConsultar}>
@@ -253,7 +255,6 @@ const Creditos = () => {
                   <th>Nombre Completo</th>
                   <th>Identificación</th>
                   <th>Monto Del Crédito</th>
-                  <th>Valor De Cuota A Pagar</th>
                   <th>Plazo De Las Cuotas</th>
                   <th>Fecha de Solicitud</th>
                   <th>Puntaje</th>
@@ -268,7 +269,6 @@ const Creditos = () => {
                     <td>{creditos.nomCompleto}</td>
                     <td>{creditos.id}</td>
                     <td>{creditos.montoCredito}</td>
-                    <td>{creditos.montoCuotas}</td>
                     <td>{creditos.plazoCuotas}</td>
                     <td>{creditos.fechaSolicitud}</td>
                     <td>{creditos.numeroRandom}</td>
@@ -277,7 +277,6 @@ const Creditos = () => {
                       {creditos.estadoCredito === 'Aprobado' && (
                         <button onClick={() => handlePagar(creditos.numeroCredito, creditos.id)}>Pagar</button>
                       )}
-                      <button onClick={() => handleEditar(creditos.numeroCredito, creditos.id)}>Editar</button>
                     </td>
                   </tr>
                 ))}
