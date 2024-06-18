@@ -53,6 +53,11 @@ const PaymentForm = () => {
   useEffect(() => {
     const storedFormData = JSON.parse(localStorage.getItem('formData')) || [];
     setFormData(storedFormData);
+    if (storedFormData.length > 0) {
+      const lastPayment = storedFormData[storedFormData.length - 1];
+      setNumCuotas(lastPayment.numcuotas);
+      setTotalCredito(lastPayment.toCredito);
+    }
     document.getElementById('formulario').reset(); 
     handlePaymentTypeChange({ target: { value: 'cuota' } });
   }, []);
@@ -76,6 +81,7 @@ if (paymentType === 'cuota') {
   if (cuotaAmount <= abonoAmount) {
     newNumCuotas = numCuotas - 1;
   }
+  newNumCuotas=newNumCuotas
   newTotalCredito = (newTotalCredito - abonoAmount).toFixed(2);
 }
 
@@ -95,13 +101,13 @@ if (paymentType === 'cuota') {
 
     const updatedFormData = [...formData, newFormData];
     localStorage.setItem('formData', JSON.stringify(updatedFormData));
-    alert('Pago exitoso');
-    document.getElementById('formulario').reset();
-    handlePaymentTypeChange({ target: { value: 'cuota' } });
     setFormData(updatedFormData);
     setNumCuotas(newNumCuotas);
     setTotalCredito(newTotalCredito);
     setShowTable(true);
+    alert('Pago exitoso');
+    document.getElementById('formulario').reset();
+    handlePaymentTypeChange({ target: { value: 'cuota' } });
   };
 
   return (
