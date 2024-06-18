@@ -216,6 +216,7 @@ const Creditos = () => {
             />
           </div>
           <div className="input-group">
+            <button type="submit">Crear Credito</button>
           </div>
           <div className="input-group">
             <button type="button" onClick={handleConsultar}>
