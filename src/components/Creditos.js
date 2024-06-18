@@ -10,6 +10,8 @@ const Creditos = () => {
   const [Credito, setCredito] = useState([]);
   const [consultaId, setConsultaId] = useState('');
   const [creditosFiltrados, setCreditosFiltrados] = useState([]);
+  const [usuarioEncontrado, setUsuarioEncontrado] = useState(false);
+
   const [formData, setFormData] = useState({
     nomCompleto: '',
     id: '',
@@ -79,7 +81,11 @@ const Creditos = () => {
     });
     setNombreCompleto('');
     setIdentificacion('');
-  };
+
+  // Alerta de éxito
+  alert('¡Crédito creado con éxito!');
+};
+
 
   const handleChangeIdentificacion = (e) => {
     const id = e.target.value;
@@ -87,22 +93,25 @@ const Creditos = () => {
   };
 
   const handleConsultar = (e) => {
-    e.preventDefault();
-    const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-    const usuario = usuarios.find((user) => user.numeroDocu === identificacion);
+  e.preventDefault();
+  const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+  const usuario = usuarios.find((user) => user.numeroDocu === identificacion);
 
-    if (usuario) {
-      const nombreCom = `${usuario.primerNombre} ${usuario.segundoNombre} ${usuario.primerApellido} ${usuario.segundoApellido}`;
-      setNombreCompleto(nombreCom);
-      setFormData((prevData) => ({
-        ...prevData,
-        nomCompleto: nombreCom,  // actualizar nombre completo en formData
-        id: identificacion,
-      }));
-    } else {
-      setNombreCompleto('Usuario no encontrado');
-    }
-  };
+  if (usuario) {
+    const nombreCom = `${usuario.primerNombre} ${usuario.segundoNombre} ${usuario.primerApellido} ${usuario.segundoApellido}`;
+    setNombreCompleto(nombreCom);
+    setFormData((prevData) => ({
+      ...prevData,
+      nomCompleto: nombreCom,
+      id: identificacion,
+    }));
+    setUsuarioEncontrado(true); // Usuario encontrado
+  } else {
+    setNombreCompleto('Usuario no encontrado');
+    setUsuarioEncontrado(false); // Usuario no encontrado
+  }
+};
+
 
   const handleChangeConsultaId = (e) => {
     setConsultaId(e.target.value);
@@ -145,7 +154,7 @@ const Creditos = () => {
 
   return (
     <div className="formulario">
-      <Accordion title="Crear Crédito">
+     <Accordion title="Crear Crédito">
         <form id="crear-credito-form" onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="nombre">Nombre Completo:</label>
@@ -161,57 +170,61 @@ const Creditos = () => {
             />
           </div>
           <div className="input-group">
-            <label htmlFor="monto">Monto del Crédito:</label>
-            <input
-              type="number"
-              id="monto"
-              name="montoCredito"
-              value={formData.montoCredito}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="input-group">
-            <label htmlFor="plazo">Plazo de Cuotas (Meses):</label>
-            <select
-              id="plazo"
-              name="plazoCuotas"
-              value={formData.plazoCuotas}
-              onChange={handleChange}
-            >
-              <option value="">Seleccione</option>
-              <option value="12">12 Meses</option>
-              <option value="24">24 Meses</option>
-              <option value="36">36 Meses</option>
-            </select>
-          </div>
-          <div className="input-group">
-            <label htmlFor="fecha">Fecha de Solicitud:</label>
-            <input
-              type="date"
-              id="fecha"
-              name="fechaSolicitud"
-              value={formData.fechaSolicitud}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="input-group">
-            <label htmlFor="cuota">Cuota:</label>
-            <input
-              type="text"
-              id="cuota"
-              name="cuota"
-              value={GenerarCuota(formData.montoCredito, formData.plazoCuotas)}
-              readOnly
-            />
-          </div>
-          <div className="input-group">
-            <button type="submit">Crear Credito</button>
-          </div>
-          <div className="input-group">
             <button type="button" onClick={handleConsultar}>
               Consultar Usuario
             </button>
           </div>
+          {usuarioEncontrado && (
+            <>
+              <div className="input-group">
+                <label htmlFor="monto">Monto del Crédito:</label>
+                <input
+                  type="number"
+                  id="monto"
+                  name="montoCredito"
+                  value={formData.montoCredito}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="plazo">Plazo de Cuotas (Meses):</label>
+                <select
+                  id="plazo"
+                  name="plazoCuotas"
+                  value={formData.plazoCuotas}
+                  onChange={handleChange}
+                >
+                  <option value="">Seleccione</option>
+                  <option value="12">12 Meses</option>
+                  <option value="24">24 Meses</option>
+                  <option value="36">36 Meses</option>
+                </select>
+              </div>
+              <div className="input-group">
+                <label htmlFor="fecha">Fecha de Solicitud:</label>
+                <input
+                  type="date"
+                  id="fecha"
+                  name="fechaSolicitud"
+                  value={formData.fechaSolicitud}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="cuota">Cuota:</label>
+                <input
+                  type="text"
+                  id="cuota"
+                  name="cuota"
+                  value={GenerarCuota(formData.montoCredito, formData.plazoCuotas)}
+                  readOnly
+                />
+              </div>
+              <div className="input-group">
+                <button type="submit">Crear Crédito</button>
+              </div>
+            </>
+          )}
         </form>
       </Accordion>
 

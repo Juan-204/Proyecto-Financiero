@@ -27,6 +27,9 @@ const Clientes = () => {
     const [editingUserId, setEditingUserId] = useState(null); // Nuevo estado para almacenar el ID del usuario en edición
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showTable, setShowTable] = useState(false); // Estado para mostrar la tabla de clientes
+
+
     
    
     const navigate = useNavigate();
@@ -58,8 +61,18 @@ const Clientes = () => {
         if (editMode) {
             handleSaveChanges();
         } else {
+            if (!isTipoDocUnique(formData.tipoDoc)) {
+                alert("Ya existe un cliente con el mismo tipo de documento.");
+                resetFormData(); // Resetear los datos del formulario
+                return;
+                
+            }
             createNewCliente();
         }
+    };
+    
+    const isTipoDocUnique = (tipoDoc) => {
+        return !usuarios.some((usuario) => usuario.tipoDoc === tipoDoc);
     };
 
     const handleSaveChanges = () => {
@@ -86,8 +99,15 @@ const Clientes = () => {
         localStorage.setItem('usuarios', JSON.stringify(newUsuarios));
     
         setShowCreateModal(true);
+        setShowTable(true); // Mostrar la tabla después de crear un clien
         resetFormData();
     };
+
+    const handleCancel = () => {
+        resetFormData();
+        setEditMode(false); // Asegurarse de salir del modo de edición si se cancela
+    };
+
     
     const resetFormData = () => {
         setFormData({
@@ -132,7 +152,11 @@ const Clientes = () => {
             setEditingUserId(userId);
             setEditMode(true);
         }
+        
     };
+
+    
+
 
 
     useEffect(() => {
@@ -302,7 +326,7 @@ const Clientes = () => {
                 </div>
                 <div className="input-group">
                     <button type="submit">{editMode ? 'Guardar Cambios' : 'Crear Cliente'}</button>
-                    {editMode && <button type="button" onClick={() => setEditMode(false)}>Cancelar Edición</button>}
+                    {editMode && <button type="button" onClick={handleCancel}>Cancelar Edición</button>}
                 </div>
             </form>
             <Modal
@@ -321,8 +345,10 @@ const Clientes = () => {
             >
                 <p>El usuario ha sido editado con éxito. ¿Desea continuar con la creación del crédito?</p>
             </Modal>
+            {showTable && ( // Mostrar la tabla solo si showTable es true
             <div className='table'>
                 <h2>Usuarios Creados</h2>
+              
                 <table>
                     <thead>
                         <tr>
@@ -367,7 +393,9 @@ const Clientes = () => {
                 ))}
                 </tbody>
                 </table>
+         
                 </div>
+                )}
         </div>
 
     )
