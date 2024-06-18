@@ -17,7 +17,6 @@ const Creditos = () => {
     fechaSolicitud: '',
   });
 
-  
 
   const navigate = useNavigate(); // Hook para redirección
 
@@ -271,7 +270,6 @@ const Creditos = () => {
                       {creditos.estadoCredito === 'Aprobado' && (
                         <button onClick={() => handlePagar(creditos.numeroCredito, creditos.id)}>Pagar</button>
                       )}
-                      
                     </td>
                   </tr>
                 ))}
