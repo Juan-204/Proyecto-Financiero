@@ -5,7 +5,7 @@ import './Clientes.css';
 const PaymentForm = () => {
   const location = useLocation();
   console.log('Location state:', location.state);
-  const { numeroCredito, nomCompleto, identificacion, monto } = location.state || {};
+  const { numeroCredito, nomCompleto, identificacion, monto, totalCuotas } = location.state || {};
 
   const [formData, setFormData] = useState([]);
   const [showTable, setShowTable] = useState(false);
@@ -132,7 +132,7 @@ const PaymentForm = () => {
           </label>
           <div id="amountDueSection">
             <label htmlFor="amountDue">Monto a pagar: </label>
-            <input type="text" id="amountDue" name="amountDue" value="5000" readOnly />
+            <input type="text" id="amountDue" name="amountDue" value={totalCuotas} readOnly />
           </div>
           <label>
             <input type="radio" name="paymentType" value="total" /> Total a Pagar
