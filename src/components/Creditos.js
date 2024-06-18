@@ -16,9 +16,11 @@ const Creditos = () => {
     plazoCuotas: '',
     fechaSolicitud: '',
   });
+
   const [editMode, setEditMode] = useState(false);
   const [editingCreditId, setEditingCreditId] = useState(null);
   
+
   const navigate = useNavigate(); // Hook para redirección
 
   useEffect(() => {
@@ -27,15 +29,17 @@ const Creditos = () => {
       setCredito(JSON.parse(storedCreditos));
     }
   }, []);
+
   const GenerarCuota = (montoCredito, plazoCuotas) => {
     const cuota =(montoCredito * 0,3+ montoCredito) /plazoCuotas;
   return cuota.toFixed(2); // Redondear a 2 decimales para evitar valores largos
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -47,34 +51,23 @@ const Creditos = () => {
       return;
     }
 
-    if (editMode) {
-      // Editar el crédito existente
-      const updatedCredito = Credito.map((creditos) =>
-        creditos.numeroCredito === editingCreditId ? { ...formData, numeroCredito: editingCreditId } : creditos
-      );
-      setCredito(updatedCredito);
-      localStorage.setItem('credito', JSON.stringify(updatedCredito));
-      setEditMode(false);
-      setEditingCreditId(null);
-    } else {
-      // Crear un nuevo crédito
-      const randomNumber = Math.floor(Math.random() * 100) + 1;
-      const numeroRand = Math.floor(Math.random() * 10000) + 1;
-      const estado = randomNumber < 50 ? 'Denegado' : 'Aprobado';
+    // Crear un nuevo crédito
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    const numeroRand = Math.floor(Math.random() * 10000) + 1;
+    const estado = randomNumber < 50 ? 'Denegado' : 'Aprobado';
 
-      const updatedFormData = {
-        ...formData,
-        nomCompleto: nombreCompleto,
-        id: identificacion,
-        numeroRandom: randomNumber,
-        estadoCredito: estado,
-        numeroCredito: numeroRand
-      };
+    const updatedFormData = {
+      ...formData,
+      nomCompleto: nombreCompleto,
+      id: identificacion,
+      numeroRandom: randomNumber,
+      estadoCredito: estado,
+      numeroCredito: numeroRand,
+    };
 
-      const newCredito = [...Credito, updatedFormData];
-      setCredito(newCredito);
-      localStorage.setItem('credito', JSON.stringify(newCredito));
-    }
+    const newCredito = [...Credito, updatedFormData];
+    setCredito(newCredito);
+    localStorage.setItem('credito', JSON.stringify(newCredito));
 
     setFormData({
       nomCompleto: '',
@@ -117,7 +110,7 @@ const Creditos = () => {
   const handleConsultarCredito = (e) => {
     e.preventDefault();
     if (consultaId) {
-      const credEncontrados = Credito.filter(credito => credito.id === consultaId);
+      const credEncontrados = Credito.filter((credito) => credito.id === consultaId);
       setCreditosFiltrados(credEncontrados);
     } else {
       setCreditosFiltrados([]);
@@ -149,8 +142,6 @@ const Creditos = () => {
     });
     //console.log(nombreCompleto)
   };
-  
-
 
   const handleEditar = (numeroCredito) => {
     const credito = Credito.find((credito) => credito.numeroCredito === numeroCredito);
@@ -160,18 +151,15 @@ const Creditos = () => {
       setEditingCreditId(numeroCredito);
     }
   };
+
+
   return (
-    <div className='formulario'>
-      <Accordion title="Crear Credito">
+    <div className="formulario">
+      <Accordion title="Crear Crédito">
         <form id="crear-credito-form" onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="nombre">Nombre Completo:</label>
-            <input
-              type="text"
-              id="nombre"
-              value={nombreCompleto}
-              readOnly
-            />
+            <input type="text" id="nombre" value={nombreCompleto} readOnly />
           </div>
           <div className="input-group">
             <label htmlFor="identificacion">Identificación:</label>
@@ -217,6 +205,7 @@ const Creditos = () => {
             />
           </div>
           <div className="input-group">
+
             <label htmlFor="cuota">Cuota:</label>
             <input
               type="text"
@@ -232,15 +221,20 @@ const Creditos = () => {
             </button>
           </div>
           <div className="input-group">
-            <button type="button" onClick={handleConsultar} >
+            <button type="button" onClick={handleConsultar}>
               Consultar Usuario
             </button>
           </div>
         </form>
       </Accordion>
 
-      <Accordion title="Consultar Credito">
-        <form id="consultar-credito" action="#" method="post" onSubmit={handleConsultarCredito}>
+      <Accordion title="Consultar Crédito">
+        <form
+          id="consultar-credito"
+          action="#"
+          method="post"
+          onSubmit={handleConsultarCredito}
+        >
           <div className="input-group">
             <label htmlFor="identificacion">Identificación:</label>
             <input
@@ -251,13 +245,11 @@ const Creditos = () => {
             />
           </div>
           <div className="input-group">
-            <button type="submit">
-              Consultar Usuario
-            </button>
+            <button type="submit">Consultar Crédito</button>
           </div>
         </form>
         {creditosFiltrados.length > 0 && (
-          <div className='table'>
+          <div className="table">
             <h2>Creditos Creados</h2>
             <table>
               <thead>
@@ -265,7 +257,7 @@ const Creditos = () => {
                   <th>#</th>
                   <th>Nombre Completo</th>
                   <th>Identificación</th>
-                  <th>Monto Del Credito</th>
+                  <th>Monto Del Crédito</th>
                   <th>Plazo De Las Cuotas</th>
                   <th>Fecha de Solicitud</th>
                   <th>Puntaje</th>
