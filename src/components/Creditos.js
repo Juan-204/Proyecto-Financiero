@@ -18,9 +18,6 @@ const Creditos = () => {
     fechaSolicitud: '',
   });
 
-  const [editMode, setEditMode] = useState(false);
-  const [editingCreditId, setEditingCreditId] = useState(null);
-  
 
   const navigate = useNavigate(); // Hook para redirección
 
@@ -149,15 +146,6 @@ const Creditos = () => {
     //console.log(nombreCompleto)
   };
 
-  const handleEditar = (numeroCredito) => {
-    const credito = Credito.find((credito) => credito.numeroCredito === numeroCredito);
-    if (credito) {
-      setFormData(credito);
-      setEditMode(true);
-      setEditingCreditId(numeroCredito);
-    }
-  };
-
 
   return (
     <div className="formulario">
@@ -222,9 +210,7 @@ const Creditos = () => {
             />
           </div>
           <div className="input-group">
-            <button type="submit">
-              {editMode ? 'Guardar Cambios' : 'Crear Crédito'}
-            </button>
+            
           </div>
           <div className="input-group">
             <button type="button" onClick={handleConsultar}>
@@ -288,7 +274,6 @@ const Creditos = () => {
                       {creditos.estadoCredito === 'Aprobado' && (
                         <button onClick={() => handlePagar(creditos.numeroCredito, creditos.id)}>Pagar</button>
                       )}
-                      <button onClick={() => handleEditar(creditos.numeroCredito, creditos.id)}>Editar</button>
                     </td>
                   </tr>
                 ))}
