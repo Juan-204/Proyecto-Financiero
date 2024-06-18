@@ -128,12 +128,19 @@ const Creditos = () => {
     console.log(uss)
     const nombre = `${uss.nomCompleto}`;
     const monto = `${uss.montoCredito}`
+
+    const montoCuota = `${uss.montoCuotas}`
+    const cantidadCuotas = `${uss.plazoCuotas}`
+    setNombre(nombre)
+    console.log(nombre)
     navigate(`/pagos/${numeroCredito}`, {
       state: {
         numeroCredito: numeroCredito,
         nomCompleto: nombre,
         identificacion: id,
-        monto: monto
+        monto: monto,
+        totalCuotas: montoCuota,
+        plazo: cantidadCuotas
       }
     });
     //console.log(nombreCompleto)
